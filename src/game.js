@@ -1,7 +1,7 @@
 import { init, GameLoop } from '../lib/kontra.min.mjs'
-import createStartScene from './scenes/start.js'
+// import createStartScene from './scenes/start.js'
 import createMainScene from './scenes/main.js'
-import createEndScene from './scenes/end.js'
+// import createEndScene from './scenes/end.js'
 
 init()
 
