@@ -10,81 +10,6 @@ const Shield = Sprite({
   y: -21,
   anchor: { x: 0.5, y: 0.5 },
   color: 'green',
-  direction: 'north',
-  changeDirection: function(direction) {
-    this.direction = direction
-    switch(direction) {
-      case 'north':
-        // set sprite to north-facing sprite
-        this.y = -21
-        this.x = 0
-        break
-      case 'south':
-        // set sprite to south-facing sprite
-        this.y = 21
-        this.x = 0
-        break
-      case 'east':
-        // set sprite to east-facing sprite
-        this.x = 21
-        this.y = 0
-        break
-      case 'west':
-        // set sprite to west-facing sprite
-        this.x = -21
-        this.y = 0
-        break
-      case 'northeast':
-        // set sprite to northeast-facing sprite
-        this.y = -21
-        this.x = 21
-        break
-      case 'northwest':
-        // set sprite to northwest-facing sprite
-        this.y = -21
-        this.x = -21
-        break
-      case 'southeast':
-        // set sprite to southeast-facing sprite
-        this.y = 21
-        this.x = 21
-        break
-      case 'southwest':
-        // set sprite to southwest-facing sprite
-        this.y = 21
-        this.x = -21
-        break
-    }
-  },
-  render: function() {
-    this.context.fillStyle = this.color
-    
-    // IDK why these x and y coords work, but they do, kind of
-    if (this.direction == 'northeast') {
-      this.context.rotate(degToRad(45))
-      this.context.fillRect(0, -4, this.width, this.height)
-    } else if (this.direction == 'east') {
-      this.context.rotate(degToRad(90))
-      this.context.fillRect(-10, -16, this.width, this.height)
-    } else if (this.direction == 'southeast') {
-      this.context.rotate(degToRad(135))
-      this.context.fillRect(-20, -6, this.width, this.height)
-    } else if (this.direction == 'south') {
-      this.context.rotate(degToRad(180))
-      this.context.fillRect(-24, -4, this.width, this.height)
-    } else if (this.direction == 'southwest') {
-      this.context.rotate(degToRad(225))
-      this.context.fillRect(-20, 12, this.width, this.height)
-    } else if (this.direction == 'west') {
-      this.context.rotate(degToRad(270))
-      this.context.fillRect(-14, 8, this.width, this.height)
-    } else if (this.direction == 'northwest') {
-      this.context.rotate(degToRad(315))
-      this.context.fillRect(-6, 14, this.width, this.height)
-    } else {
-      this.context.fillRect(0, 0, this.width, this.height)
-    }
-  }
 })
 
 const Player = Sprite({
@@ -150,11 +75,37 @@ const Player = Sprite({
         }
       }
 
-      this.x += vector.x
-      this.y += vector.y
+      this.x += vector.x * 2
+      this.y += vector.y * 2
     }
 
-    this.children.forEach(shield => shield.direction != this.direction && shield.changeDirection(this.direction))
+    // set the rotation and change the sprite
+    switch(this.direction) {
+      case 'northeast':
+        this.rotation = degToRad(45)
+        break
+      case 'east':
+        this.rotation = degToRad(90)
+        break
+      case 'southeast':
+        this.rotation = degToRad(135)
+        break
+      case 'south':
+        this.rotation = degToRad(180)
+        break
+      case 'southwest':
+        this.rotation = degToRad(225)
+        break
+      case 'west':
+        this.rotation = degToRad(270)
+        break
+      case 'northwest':
+        this.rotation = degToRad(315)
+        break
+      default:
+        this.rotation = degToRad(0)
+        break
+    }
   }
 })
 
