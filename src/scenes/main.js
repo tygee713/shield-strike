@@ -2,6 +2,7 @@ import { init, Scene, Sprite, GameObject, collides } from '../../lib/kontra.min.
 import Player, { Shield } from '../objects/player.js'
 import createEnemy from '../objects/enemy.js'
 import { showEndScene } from '../game.js'
+import createProjectile from '../objects/projectile.js'
 
 const { canvas } = init()
 
@@ -80,13 +81,20 @@ const createScene = () => Scene({
     let enemy = this.enemies[enemyIndex]
     let projectile = this.projectiles[projectileIndex]
     enemy.health -= projectile.damage
-    if (enemy.health <= 0) this.enemies.splice(enemyIndex, 1)
-    if (!projectile.passThrough) this.projectiles.splice(projectileIndex, 1)
+    if (enemy.health <= 0) {
+      this.enemies.splice(enemyIndex, 1)
+      this.remove(enemy)
+    }
+    if (!projectile.passThrough) {
+      this.projectiles.splice(projectileIndex, 1)
+      this.remove(projectile)
+    }
   },
   damagePlayer: function(projectileIndex) {
     let projectile = this.projectiles[projectileIndex]
     Player.health -= projectile.damage
     this.projectiles.splice(projectileIndex, 1)
+    this.remove(projectile)
     if (Player.health <= 0) showEndScene()
   },
   reflectProjectile: function(projectileIndex) {
@@ -100,7 +108,9 @@ const createScene = () => Scene({
   },
   absorbProjectile: function(projectileIndex) {
     // Delete the projectile
+    let projectile = this.projectiles[projectileIndex]
     this.projectiles.splice(projectileIndex, 1)
+    this.remove(projectile)
     // Increase the shield's energy
     Shield.energy += 10
   },
@@ -112,12 +122,17 @@ const createScene = () => Scene({
       let { xMin, xMax, yMin, yMax } = mapSegments[Math.floor(Math.random() * mapSegments.length)]
       let xValue = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin
       let yValue = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin
-      createEnemy(xValue, yValue, enemyTypes[0])
+      let enemy = createEnemy(xValue, yValue, enemyTypes[0])
+      this.enemies.push(enemy)
+      this.add(enemy)
     }
   },
-  shootProjectile: function() {
+  shootProjectile: function(originX, originY, type) {
     // Spawn a projectile from an enemy position
     // Called from the enemy's update function
+    let projectile = createProjectile(originX, originY, Player.x, Player.y, type)
+    this.projectiles.push(projectile)
+    this.add(projectile)
   }
 })
 

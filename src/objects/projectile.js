@@ -13,7 +13,7 @@ const projectileAttributes = {
   }
 }
 
-const createProjectile = (x, y, targetX, targetY, type, index) => {
+const createProjectile = (x, y, targetX, targetY, type) => {
   const { speed, damage, image, width, height, passThrough } = projectileAttributes[type]
 
   // Calculate the velocity
@@ -26,7 +26,6 @@ const createProjectile = (x, y, targetX, targetY, type, index) => {
     height,
     x,
     y,
-    image,
     xDelta,
     yDelta,
     damage,
