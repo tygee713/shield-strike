@@ -18,6 +18,7 @@ const createEnemy = (x, y, type, scene) => {
   return Sprite({
     width: 32,
     height: 32,
+    color: 'red',
     x,
     y,
     anchor: { x: 0.5, y: 0.5 },
@@ -41,7 +42,8 @@ const createEnemy = (x, y, type, scene) => {
       let xDistance = this.x - Player.x
       let yDistance = this.y - Player.y
       let distanceToPlayer = Math.sqrt(xDistance * xDistance + yDistance * yDistance)
-      if (distanceToPlayer > this.range || this.timeSinceAttack < this.fireInterval) {
+      console.log(distanceToPlayer)
+      if ((distanceToPlayer > this.range || this.timeSinceAttack < this.fireInterval) && this.timeSinceAttack > 2) {
         // move towards the player position if the distance to the player position is greater than its range
         let xDiff = Player.x - this.x
         let yDiff = Player.y - this.y
@@ -51,7 +53,9 @@ const createEnemy = (x, y, type, scene) => {
       } else {
         // otherwise, shoot a projectile towards current player position if timeSinceAttack > fireInterval
         if (this.timeSinceAttack > this.fireInterval) {
-          this.scene.shootProjectile(this.x, this.y, projectileType)
+          let xOffset = this.facing === 'right' ? 24 : -24
+          let yOffset = this.y < Player.y ? 24 : -24
+          this.scene.shootProjectile(this.x + xOffset, this.y + yOffset, projectileType)
           this.timeSinceAttack = 0
         }
       }

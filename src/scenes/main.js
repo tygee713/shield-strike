@@ -55,17 +55,19 @@ const createScene = () => Scene({
   update: function(dt) {
     // loop through all the projectiles and check for collisions
     this.projectiles.forEach((projectile, i) => {
-      for (let x = 0; x < this.enemies.length; x++) {
-        if (collides(this.enemies[x], projectile)) {
-          this.damageEnemy(x, i)
-        } else if (collides(Player, projectile)) {
-          this.damagePlayer(i)
-        } else if (collides(Shield, projectile)) {
-          if (Shield.reflect) {
-            this.reflectProjectile(i)
-          } else {
-            this.absorbProjectile(i)
-          }
+      if (projectile.alive) {
+        for (let x = 0; x < this.enemies.length; x++) {
+          if (collides(this.enemies[x], projectile)) {
+            this.damageEnemy(x, i)
+          } else if (collides(Shield, projectile)) {
+            if (Shield.reflect) {
+              this.reflectProjectile(i)
+            } else {
+              this.absorbProjectile(i)
+            }
+          } else if (collides(Player, projectile)) {
+            this.damagePlayer(i)
+          } 
         }
       }
     })
@@ -76,24 +78,30 @@ const createScene = () => Scene({
       this.spawnEnemies()
       this.timeSinceSpawn = 0
     }
+
+    this.objects.forEach((obj) => obj.update(dt))
   },
   damageEnemy: function(enemyIndex, projectileIndex) {
     let enemy = this.enemies[enemyIndex]
     let projectile = this.projectiles[projectileIndex]
+    if (!projectile.alive) return
     enemy.health -= projectile.damage
     if (enemy.health <= 0) {
       this.enemies.splice(enemyIndex, 1)
       this.remove(enemy)
     }
     if (!projectile.passThrough) {
-      this.projectiles.splice(projectileIndex, 1)
+      // this.projectiles.splice(projectileIndex, 1)
+      projectile.alive = false
       this.remove(projectile)
     }
   },
   damagePlayer: function(projectileIndex) {
     let projectile = this.projectiles[projectileIndex]
+    if (!projectile.alive) return
     Player.health -= projectile.damage
-    this.projectiles.splice(projectileIndex, 1)
+    // this.projectiles.splice(projectileIndex, 1)
+    projectile.alive = false
     this.remove(projectile)
     if (Player.health <= 0) showEndScene()
   },
@@ -101,15 +109,19 @@ const createScene = () => Scene({
     // Reflect the projectile's x and y velocities
     // For now, this will just reverse the dx and dy, but this should be more elaborate later
     let projectile = this.projectiles[projectileIndex]
+    if (!projectile.alive || projectile.reflected) return
     projectile.xDelta = -projectile.xDelta
     projectile.yDelta = -projectile.yDelta
     // Increase the shield's energy
     Shield.energy += 10
+    projectile.reflected = true
   },
   absorbProjectile: function(projectileIndex) {
     // Delete the projectile
     let projectile = this.projectiles[projectileIndex]
-    this.projectiles.splice(projectileIndex, 1)
+    if (!projectile.alive) return
+    // this.projectiles.splice(projectileIndex, 1)
+    projectile.alive = false
     this.remove(projectile)
     // Increase the shield's energy
     Shield.energy += 10
@@ -122,7 +134,7 @@ const createScene = () => Scene({
       let { xMin, xMax, yMin, yMax } = mapSegments[Math.floor(Math.random() * mapSegments.length)]
       let xValue = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin
       let yValue = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin
-      let enemy = createEnemy(xValue, yValue, enemyTypes[0])
+      let enemy = createEnemy(xValue, yValue, enemyTypes[0], this)
       this.enemies.push(enemy)
       this.add(enemy)
     }

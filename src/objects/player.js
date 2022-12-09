@@ -10,7 +10,7 @@ export const Shield = Sprite({
   y: -21,
   anchor: { x: 0.5, y: 0.5 },
   color: 'green',
-  reflect: false,
+  reflect: true,
   energy: 0,
 })
 
