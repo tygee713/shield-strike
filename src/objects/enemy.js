@@ -1,10 +1,18 @@
-import { degToRad, init, initKeys, Sprite } from '../../lib/kontra.min.mjs'
+import { init, Sprite } from '../../lib/kontra.min.mjs'
 import Player from '../objects/player.js'
 
 let { canvas } = init()
 initKeys()
 
-const createEnemy = (x, y, range) => Sprite({
+const enemyAttributes = {
+  'goblin': {
+    range: 300,
+    speed: 1,
+    projectileSpeed: 10,
+  }
+}
+
+const createEnemy = (x, y, type) => Sprite({
   width: 32,
   height: 32,
   x,
