@@ -3,13 +3,15 @@ import { degToRad, init, initKeys, keyPressed, Sprite } from '../../lib/kontra.m
 let { canvas } = init()
 initKeys()
 
-const Shield = Sprite({
+export const Shield = Sprite({
   width: 24,
   height: 4,
   x: 0,
   y: -21,
   anchor: { x: 0.5, y: 0.5 },
   color: 'green',
+  reflect: false,
+  energy: 0,
 })
 
 const Player = Sprite({
@@ -21,6 +23,7 @@ const Player = Sprite({
   color: 'blue',
   children: [Shield],
   direction: 'north',
+  health: 10,
   update: function(dt) {
     let vector = { x: 0, y: 0 }
 

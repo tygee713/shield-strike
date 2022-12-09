@@ -33,12 +33,14 @@ export const showMainScene = () => {
 // Moves from the main scene to the ending scene
 // Called when the character dies
 export const showEndScene = () => {
-  if (currentScene) {
-    currentScene.hide()
-    currentScene.destroy()
-  }
-  currentScene = createEndScene()
-  currentScene.show()
+  // if (currentScene) {
+  //   currentScene.hide()
+  //   currentScene.destroy()
+  // }
+  // currentScene = createEndScene()
+  // currentScene.show()
+  alert("Game over")
+  loop.stop()
 }
 
 const loop = GameLoop({

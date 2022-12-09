@@ -9,11 +9,12 @@ const enemyAttributes = {
     speed: 1,
     projectile: 'rock',
     fireInterval: 3,
+    health: 1,
   }
 }
 
-const createEnemy = (x, y, type) => {
-  const { range, speed, projectile, fireInterval } = enemyAttributes[type]
+const createEnemy = (x, y, type, index) => {
+  const { range, speed, projectile, fireInterval, health } = enemyAttributes[type]
   return Sprite({
     width: 32,
     height: 32,
@@ -22,6 +23,7 @@ const createEnemy = (x, y, type) => {
     anchor: { x: 0.5, y: 0.5 },
     range,
     timeSinceAttack: 0,
+    health,
     update: function(dt) {
       // update which way it's facing depending on player position
       // move towards the player position if the distance to the player position is greater than its range

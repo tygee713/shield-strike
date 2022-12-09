@@ -12,7 +12,7 @@ const projectileAttributes = {
   }
 }
 
-const createProjectile = (x, y, targetX, targetY, type) => {
+const createProjectile = (x, y, targetX, targetY, type, index) => {
   const { speed, damage, image, width, height } = projectileAttributes[type]
 
   // Calculate the velocity
@@ -25,10 +25,10 @@ const createProjectile = (x, y, targetX, targetY, type) => {
     height,
     x,
     y,
+    image,
     xDelta,
     yDelta,
     damage,
-    image,
     anchor: { x: 0.5, y: 0.5 },
     update: function(dt) {
       this.x += this.xDelta
