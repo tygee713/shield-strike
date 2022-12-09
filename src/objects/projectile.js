@@ -9,11 +9,12 @@ const projectileAttributes = {
     image: null,
     width: 3,
     height: 3,
+    passThrough: false,
   }
 }
 
 const createProjectile = (x, y, targetX, targetY, type, index) => {
-  const { speed, damage, image, width, height } = projectileAttributes[type]
+  const { speed, damage, image, width, height, passThrough } = projectileAttributes[type]
 
   // Calculate the velocity
   const angle = Math.atan2(targetY, targetX)
@@ -29,6 +30,7 @@ const createProjectile = (x, y, targetX, targetY, type, index) => {
     xDelta,
     yDelta,
     damage,
+    passThrough,
     anchor: { x: 0.5, y: 0.5 },
     update: function(dt) {
       this.x += this.xDelta

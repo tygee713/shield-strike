@@ -13,7 +13,7 @@ const enemyAttributes = {
   }
 }
 
-const createEnemy = (x, y, type, index) => {
+const createEnemy = (x, y, type) => {
   const { range, speed, projectile, fireInterval, health } = enemyAttributes[type]
   return Sprite({
     width: 32,
