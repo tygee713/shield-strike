@@ -4,14 +4,20 @@ let { canvas } = init()
 initKeys()
 
 export const Shield = Sprite({
-  width: 24,
-  height: 4,
+  width: 32,
+  height: 5,
   x: 0,
-  y: -21,
+  y: -16,
   anchor: { x: 0.5, y: 0.5 },
-  color: 'green',
-  reflect: true,
+  reflect: false,
   energy: 0,
+  update: function(dt) {
+    if (this.reflect) {
+      this.color = 'green'
+    } else {
+      this.color = null
+    }
+  }
 })
 
 const Player = Sprite({
@@ -24,6 +30,8 @@ const Player = Sprite({
   children: [Shield],
   direction: 'north',
   health: 10,
+  meter: 3,
+  meterCooldown: 0,
   update: function(dt) {
     let vector = { x: 0, y: 0 }
 
@@ -40,6 +48,24 @@ const Player = Sprite({
       vector.x += 1
     }
 
+    if (keyPressed('space') && !this.meterCooldown) {
+      this.children[0].reflect = true
+      this.meter -= dt
+      if (this.meter <= 0.05) this.meterCooldown = 3
+    } else {
+      this.children[0].reflect = false
+      if (this.meter < 3 && !this.meterCooldown) {
+        let newMeter = this.meter + dt * 3
+        if (newMeter > 3) newMeter = 3
+        this.meter = newMeter
+      }
+      if (this.meterCooldown) {
+        let newMeterCooldown = this.meterCooldown -dt
+        if (newMeterCooldown < 0) newMeterCooldown = 0
+        this.meterCooldown = newMeterCooldown
+      }
+    }
+
     // normalize vector movement
     let length = Math.sqrt(vector.x * vector.x + vector.y * vector.y)
 
@@ -47,34 +73,21 @@ const Player = Sprite({
       vector.x /= length
       vector.y /= length
 
-      // diagonal movement
-      if (vector.x != 0 && vector.y != 0) {
-        if (vector.y > 0) {
+      if (!this.children[0].reflect) {
+        // horizontal movement
+        if (vector.x != 0 && vector.y == 0) {
           if (vector.x > 0) {
-            this.direction = 'southeast'
+            this.direction = 'east'
           } else {
-            this.direction = 'southwest'
+            this.direction = 'west'
           }
-        } else {
-          if (vector.x > 0) {
-            this.direction = 'northeast'
+        // vertical movement
+        } else if (vector.x == 0 && vector.y != 0) {
+          if (vector.y > 0) {
+            this.direction = 'south'
           } else {
-            this.direction = 'northwest'
+            this.direction = 'north'
           }
-        }
-      // horizontal movement
-      } else if (vector.x != 0) {
-        if (vector.x > 0) {
-          this.direction = 'east'
-        } else {
-          this.direction = 'west'
-        }
-      // vertical movement
-      } else {
-        if (vector.y > 0) {
-          this.direction = 'south'
-        } else {
-          this.direction = 'north'
         }
       }
 
