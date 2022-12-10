@@ -3,6 +3,7 @@ import Player, { Shield } from '../objects/player.js'
 import createEnemy from '../objects/enemy.js'
 import { showEndScene } from '../game.js'
 import createProjectile from '../objects/projectile.js'
+import createPowerup from '../objects/powerup.js'
 
 const { canvas } = init()
 
@@ -49,8 +50,10 @@ const createScene = () => Scene({
   id: 'main',
   level: 1,
   timeSinceSpawn: 0,
+  timeSincePowerup: 0,
   enemies: [],
   projectiles: [],
+  powerups: [],
   objects: [Player],
   update: function(dt) {
     // loop through all the projectiles and check for collisions
@@ -59,18 +62,28 @@ const createScene = () => Scene({
         for (let x = 0; x < this.enemies.length; x++) {
           if (collides(this.enemies[x], projectile)) {
             this.damageEnemy(x, i)
-          } else if (collides(Shield, projectile)) {
-            if (Shield.reflect) {
-              this.reflectProjectile(i)
-            } else {
-              this.absorbProjectile(i)
-            }
-          } else if (collides(Player, projectile)) {
-            this.damagePlayer(i)
-          } 
+          }
+          if (collides(this.enemies[x], Player)) {
+            // TODO: function that handles this
+          }
         }
+        if (collides(Shield, projectile)) {
+          if (Shield.reflect) {
+            this.reflectProjectile(i)
+          } else {
+            this.absorbProjectile(i)
+          }
+        } else if (collides(Player, projectile)) {
+          this.damagePlayer(i)
+        } 
       }
     })
+
+    for (let x = 0; x < this.powerups.length; x++) {
+      if (collides(this.powerups[x], Player)) {
+        this.gainPowerup(x)
+      }
+    }
 
     // Spawn enemies if at the time interval
     this.timeSinceSpawn += dt
@@ -78,6 +91,8 @@ const createScene = () => Scene({
       this.spawnEnemies()
       this.timeSinceSpawn = 0
     }
+
+    this.timeSincePowerup += dt
 
     this.objects.forEach((obj) => obj.update(dt))
   },
@@ -87,6 +102,12 @@ const createScene = () => Scene({
     if (!projectile.alive) return
     enemy.health -= projectile.damage
     if (enemy.health <= 0) {
+      if (this.timeSincePowerup >= 10) {
+        let powerup = createPowerup(enemy)
+        this.powerups.push(powerup)
+        this.add(powerup)
+        this.timeSincePowerup = 0
+      }
       this.enemies.splice(enemyIndex, 1)
       this.remove(enemy)
     }
@@ -145,7 +166,13 @@ const createScene = () => Scene({
     let projectile = createProjectile(originX, originY, Player.x, Player.y, type)
     this.projectiles.push(projectile)
     this.add(projectile)
-  }
+  },
+  gainPowerup: function(powerupIndex) {
+    // TODO: take action depending on powerup type
+    let powerup = this.powerups[powerupIndex]
+    this.powerups.splice(powerupIndex, 1)
+    this.remove(powerup)
+  },
 })
 
 export default createScene
