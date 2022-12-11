@@ -62,12 +62,21 @@ const enemyAttributes = {
   },
 }
 
+const createCollider = () => Sprite({
+  width: 16,
+  height: 16,
+  anchor: { x: 0.5, y: 0.5 },
+  opacity: 0,
+  color: 'red',
+})
+
 const createEnemy = (x, y, type, scene) => {
   const { range, speed, projectileType, castInterval, health, castTime } = enemyAttributes[type]
+  const collider = createCollider()
   return Sprite({
     width: 32,
     height: 32,
-    color: 'red',
+    color: 'purple',
     x,
     y,
     anchor: { x: 0.5, y: 0.5 },
@@ -80,6 +89,7 @@ const createEnemy = (x, y, type, scene) => {
     facing: null,
     scene,
     castInterval,
+    children: [collider],
     update: function(dt) {
       this.timeSinceAttack += dt
 
@@ -93,8 +103,24 @@ const createEnemy = (x, y, type, scene) => {
       let xDistance = this.x - Player.x
       let yDistance = this.y - Player.y
       let distanceToPlayer = Math.sqrt(xDistance * xDistance + yDistance * yDistance)
-      console.log(distanceToPlayer)
       if ((distanceToPlayer > this.range || this.timeSinceAttack < this.castInterval) && !this.attackAnimationTime) {
+        // if the enemy is too close to another, try moving away from it before moving towards the player
+        if (this.colliderEnemy) {
+          if (this.colliderEnemy.x > this.x) {
+            this.x -= 1
+          } else {
+            this.x += 1
+          }
+
+          if (this.colliderEnemy.y > this.y) {
+            this.y -= 1
+          } else {
+            this.y += 1
+          }
+
+          this.colliderEnemy = null
+        }
+
         // move towards the player position if the distance to the player position is greater than its range
         let xDiff = Player.x - this.x
         let yDiff = Player.y - this.y

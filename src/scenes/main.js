@@ -5,6 +5,7 @@ import { showEndScene } from '../game.js'
 import createProjectile from '../objects/projectile.js'
 import createPowerup from '../objects/powerup.js'
 import MeterBar from '../objects/meterBar.js'
+import HealthBar from '../objects/healthBar.js'
 
 const { canvas } = init()
 
@@ -55,7 +56,7 @@ const createScene = () => Scene({
   enemies: [],
   projectiles: [],
   powerups: [],
-  objects: [Player, MeterBar],
+  objects: [HealthBar, Player, MeterBar],
   update: function(dt) {
     // loop through all the projectiles and check for collisions
     this.projectiles.forEach((projectile, i) => {
@@ -80,9 +81,21 @@ const createScene = () => Scene({
       }
     })
 
+    // Check that player picked up a powerup
     for (let x = 0; x < this.powerups.length; x++) {
       if (collides(this.powerups[x], Player)) {
         this.gainPowerup(x)
+      }
+    }
+
+    // Check that enemies collide with each other
+    for (let x = 0; x < this.enemies.length; x++) {
+      for (let y = 0; y < this.enemies.length; y++) {
+        if (!this.enemies[x]) break
+        if (!this.enemies[y]) continue
+        if (x != y && collides(this.enemies[x].children[0], this.enemies[y].children[0])) {
+          this.enemies[x].colliderEnemy = this.enemies[y]
+        }
       }
     }
 
@@ -134,6 +147,10 @@ const createScene = () => Scene({
     if (!projectile.alive || projectile.reflected) return
     projectile.xDelta = -projectile.xDelta
     projectile.yDelta = -projectile.yDelta
+    if (Player.perfectFrames > 0) {
+      projectile.xDelta = projectile.xDelta * 2
+      projectile.yDelta = projectile.yDelta * 2
+    }
     // Increase the shield's energy
     Shield.energy += 10
     projectile.reflected = true

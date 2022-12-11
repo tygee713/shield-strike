@@ -32,6 +32,7 @@ const Player = Sprite({
   health: 10,
   meter: 3,
   meterCooldown: 0,
+  perfectFrames: 0,
   update: function(dt) {
     let vector = { x: 0, y: 0 }
 
@@ -53,6 +54,7 @@ const Player = Sprite({
     }
 
     if (this.children[0].reflect) {
+      if (this.perfectFrames > 0) this.perfectFrames -= dt * 30
       this.meter -= dt
       if (this.meter <= 0) this.children[0].reflect = false
     } else {
@@ -126,6 +128,7 @@ onKey('space', function(e) {
   if (Player.meter > 1 && !Shield.reflect) {
     Shield.reflect = true
     Player.meter -= 1
+    Player.perfectFrames = 3
   }
 })
 
