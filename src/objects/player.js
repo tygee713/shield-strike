@@ -1,4 +1,4 @@
-import { degToRad, init, initKeys, keyPressed, Sprite } from '../../lib/kontra.min.mjs'
+import { degToRad, init, initKeys, keyPressed, onKey, Sprite } from '../../lib/kontra.min.mjs'
 
 let { canvas } = init()
 initKeys()
@@ -48,21 +48,18 @@ const Player = Sprite({
       vector.x += 1
     }
 
-    if (keyPressed('space') && !this.meterCooldown) {
-      this.children[0].reflect = true
-      this.meter -= dt
-      if (this.meter <= 0.05) this.meterCooldown = 3
-    } else {
+    if (!keyPressed('space')) {
       this.children[0].reflect = false
-      if (this.meter < 3 && !this.meterCooldown) {
+    }
+
+    if (this.children[0].reflect) {
+      this.meter -= dt
+      if (this.meter <= 0) this.children[0].reflect = false
+    } else {
+      if (this.meter < 3) {
         let newMeter = this.meter + dt * 3
         if (newMeter > 3) newMeter = 3
         this.meter = newMeter
-      }
-      if (this.meterCooldown) {
-        let newMeterCooldown = this.meterCooldown -dt
-        if (newMeterCooldown < 0) newMeterCooldown = 0
-        this.meterCooldown = newMeterCooldown
       }
     }
 
@@ -73,26 +70,26 @@ const Player = Sprite({
       vector.x /= length
       vector.y /= length
 
-      if (!this.children[0].reflect) {
-        // horizontal movement
-        if (vector.x != 0 && vector.y == 0) {
-          if (vector.x > 0) {
-            this.direction = 'east'
-          } else {
-            this.direction = 'west'
-          }
-        // vertical movement
-        } else if (vector.x == 0 && vector.y != 0) {
-          if (vector.y > 0) {
-            this.direction = 'south'
-          } else {
-            this.direction = 'north'
-          }
+      // horizontal movement
+      if (vector.x != 0 && vector.y == 0) {
+        if (vector.x > 0) {
+          this.direction = 'east'
+        } else {
+          this.direction = 'west'
+        }
+      // vertical movement
+      } else if (vector.x == 0 && vector.y != 0) {
+        if (vector.y > 0) {
+          this.direction = 'south'
+        } else {
+          this.direction = 'north'
         }
       }
 
-      this.x += vector.x * 2
-      this.y += vector.y * 2
+      if (!this.children[0].reflect) {
+        this.x += vector.x * 2
+        this.y += vector.y * 2
+      }
     }
 
     // set the rotation and change the sprite
@@ -122,6 +119,13 @@ const Player = Sprite({
         this.rotation = degToRad(0)
         break
     }
+  }
+})
+
+onKey('space', function(e) {
+  if (Player.meter > 1) {
+    Shield.reflect = true
+    Player.meter -= 1
   }
 })
 

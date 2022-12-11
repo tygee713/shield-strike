@@ -4,6 +4,7 @@ import createEnemy from '../objects/enemy.js'
 import { showEndScene } from '../game.js'
 import createProjectile from '../objects/projectile.js'
 import createPowerup from '../objects/powerup.js'
+import MeterBar from '../objects/meterBar.js'
 
 const { canvas } = init()
 
@@ -54,7 +55,7 @@ const createScene = () => Scene({
   enemies: [],
   projectiles: [],
   powerups: [],
-  objects: [Player],
+  objects: [Player, MeterBar],
   update: function(dt) {
     // loop through all the projectiles and check for collisions
     this.projectiles.forEach((projectile, i) => {
