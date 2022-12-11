@@ -3,30 +3,12 @@ import { degToRad, imageAssets, init, initKeys, keyPressed, onKey, Sprite, Sprit
 let { canvas } = init()
 initKeys()
 
-export const Shield = Sprite({
-  width: 32,
-  height: 5,
-  x: 0,
-  y: -16,
-  anchor: { x: 0.5, y: 0.5 },
-  reflect: false,
-  energy: 0,
-  update: function(dt) {
-    if (this.reflect) {
-      this.color = 'green'
-    } else {
-      this.color = null
-    }
-  }
-})
-
 const Player = Sprite({
   x: canvas.width / 2,
   y: canvas.height / 2,
   width: 30,
   height: 40,
   anchor: { x: 0.5, y: 0.5 },
-  children: [Shield],
   direction: 'north',
   health: 10,
   meter: 3,
@@ -50,13 +32,13 @@ const Player = Sprite({
     }
 
     if (!keyPressed('space')) {
-      this.children[0].reflect = false
+      this.shield.reflect = false
     }
 
-    if (this.children[0].reflect) {
+    if (this.shield.reflect) {
       if (this.perfectFrames > 0) this.perfectFrames -= dt * 30
       this.meter -= dt
-      if (this.meter <= 0) this.children[0].reflect = false
+      if (this.meter <= 0) this.shield.reflect = false
     } else {
       if (this.meter < 3) {
         let newMeter = this.meter + dt * 3
@@ -88,7 +70,7 @@ const Player = Sprite({
         }
       }
 
-      if (!this.children[0].reflect) {
+      if (!this.shield.reflect) {
         this.playAnimation(this.direction + 'Walk')
 
         this.x += vector.x * 2
@@ -131,8 +113,8 @@ const Player = Sprite({
 })
 
 onKey('space', function(e) {
-  if (Player.meter > 1 && !Shield.reflect) {
-    Shield.reflect = true
+  if (Player.meter > 1 && !Player.shield.reflect) {
+    Player.shield.reflect = true
     Player.meter -= 1
     Player.perfectFrames = 3
   }

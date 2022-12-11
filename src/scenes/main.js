@@ -1,9 +1,10 @@
 import { init, Scene, Sprite, GameObject, collides } from '../../lib/kontra.min.mjs'
-import Player, { Shield } from '../objects/player.js'
+import Player from '../objects/player.js'
 import createEnemy from '../objects/enemy.js'
 import { showEndScene } from '../game.js'
 import createProjectile from '../objects/projectile.js'
 import createPowerup from '../objects/powerup.js'
+import createShield from '../objects/shield.js'
 import MeterBar from '../objects/meterBar.js'
 import HealthBar from '../objects/healthBar.js'
 
@@ -57,6 +58,25 @@ const createScene = () => Scene({
   projectiles: [],
   powerups: [],
   objects: [HealthBar, Player, MeterBar],
+  render: function() {
+    this.powerups.forEach(obj => obj.render())
+    this.enemies.forEach(obj => obj.render())
+    this.projectiles.forEach(obj => obj.alive && obj.render())
+    if (Player.direction == 'north') {
+      this.shield.render()
+      Player.render()
+    } else {
+      Player.render()
+      this.shield.render()
+    }
+    MeterBar.render()
+    HealthBar.render()
+  },
+  onShow: function() {
+    this.shield = createShield(Player)
+    Player.shield = this.shield
+    this.add(this.shield)
+  },
   update: function(dt) {
     // loop through all the projectiles and check for collisions
     this.projectiles.forEach((projectile, i) => {
@@ -69,8 +89,8 @@ const createScene = () => Scene({
             // TODO: function that handles this
           }
         }
-        if (collides(Shield, projectile)) {
-          if (Shield.reflect) {
+        if (collides(this.shield, projectile)) {
+          if (this.shield.reflect) {
             this.reflectProjectile(i)
           } else {
             this.absorbProjectile(i)
@@ -152,7 +172,7 @@ const createScene = () => Scene({
       projectile.yDelta = projectile.yDelta * 2
     }
     // Increase the shield's energy
-    Shield.energy += 10
+    this.shield.energy += 10
     projectile.reflected = true
   },
   absorbProjectile: function(projectileIndex) {
@@ -163,7 +183,7 @@ const createScene = () => Scene({
     projectile.alive = false
     this.remove(projectile)
     // Increase the shield's energy
-    Shield.energy += 10
+    this.shield.energy += 10
   },
   spawnEnemies: function() {
     // Spawn a number of enemies depending on the level
