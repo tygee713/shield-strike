@@ -33,6 +33,7 @@ const Player = Sprite({
   meterCooldown: 0,
   perfectFrames: 0,
   update: function(dt) {
+    this.currentAnimation && this.currentAnimation.update(dt)
     let vector = { x: 0, y: 0 }
 
     if (keyPressed('w')) {
@@ -88,16 +89,15 @@ const Player = Sprite({
       }
 
       if (!this.children[0].reflect) {
-        if (this.animations) {
-          console.log('it hit')
-          this.playAnimation(this.direction + 'Walk')
-        }
-        console.log(this.currentAnimation)
+        this.playAnimation(this.direction + 'Walk')
+
         this.x += vector.x * 2
         this.y += vector.y * 2
+      } else {
+        this.playAnimation(this.direction + 'Idle')
       }
     } else {
-      this.animations && this.playAnimation(this.direction + 'Idle')
+      this.playAnimation(this.direction + 'Idle')
     }
 
     // set the rotation and change the sprite
@@ -152,28 +152,27 @@ image.onload = function() {
       westWalk: {
         frames: [0, 1, 2, 1],
         frameRate: 10,
-        loop: true,
       },
       eastIdle: {
         frames: 4
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
-        frameRate: 30
+        frameRate: 10,
       },
       northIdle: {
         frames: 7
       },
       northWalk: {
         frames: [6, 7, 8, 7],
-        frameRate: 30
+        frameRate: 10,
       },
       southIdle: {
         frames: 10
       },
       southWalk: {
         frames: [9, 10, 11, 10],
-        frameRate: 30
+        frameRate: 10,
       }
     }
   })
