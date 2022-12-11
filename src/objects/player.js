@@ -116,7 +116,7 @@ onKey('space', function(e) {
   if (Player.meter > 1 && !Player.shield.reflect) {
     Player.shield.startReflect()
     Player.meter -= 1
-    Player.perfectFrames = 3
+    Player.perfectFrames = 6
   }
 })
 
