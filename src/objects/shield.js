@@ -9,7 +9,7 @@ const createCollider = () => Sprite({
   x: 0,
   y: -16,
   anchor: { x: 0.5, y: 0.5 },
-  opacity: 1,
+  opacity: 0,
   color: 'red',
   update: function(dt) {
     switch(this.parent.player.direction) {
@@ -49,7 +49,7 @@ const createCollider = () => Sprite({
 
 const createShield = (player) => {
   const collider = createCollider()
-  return Sprite({
+  let shield = Sprite({
     width: 48,
     height: 40,
     x: player.x,
@@ -60,6 +60,8 @@ const createShield = (player) => {
     player,
     children: [collider],
     update: function(dt) {
+      console.log(this.currentAnimation)
+      this.currentAnimation && this.currentAnimation.update(dt)
       // change position based on player's direction
       switch(this.player.direction) {
         case 'east':
@@ -81,8 +83,53 @@ const createShield = (player) => {
       }
 
       this.children.forEach(obj => obj.update(dt))
+    },
+    startReflect: function() {
+      if (!this.reflect) {
+        this.reflect = true
+        this.playAnimation(this.player.direction)
+      }
+    },
+    stopReflect: function() {
+      this.reflect = false
+      this.currentAnimation = null
     }
   })
+
+  let image = new Image()
+  image.src = 'assets/reflector_shield_cast.png'
+  image.onload = function() {
+    let spriteSheet = SpriteSheet({
+      image,
+      frameWidth: 34,
+      frameHeight: 47,
+      animations: {
+        west: {
+          frames: '0..5',
+          frameRate: 30,
+          loop: false,
+        },
+        east: {
+          frames: '6..10',
+          frameRate: 30,
+          loop: false,
+        },
+        north: {
+          frames: '11..15',
+          frameRate: 30,
+          loop: false,
+        },
+        south: {
+          frames: '16..20',
+          frameRate: 30,
+          loop: false,
+        }
+      }
+    })
+    shield.animations = spriteSheet.animations
+    shield.currentAnimation = null
+  }
+  return shield
 }
 
 export default createShield

@@ -32,13 +32,13 @@ const Player = Sprite({
     }
 
     if (!keyPressed('space')) {
-      this.shield.reflect = false
+      this.shield.stopReflect()
     }
 
     if (this.shield.reflect) {
-      if (this.perfectFrames > 0) this.perfectFrames -= dt * 30
+      this.perfectFrames > 0 ? this.perfectFrames -= dt * 30 : this.shield.currentAnimation = null
       this.meter -= dt
-      if (this.meter <= 0) this.shield.reflect = false
+      if (this.meter <= 0) this.shield.stopReflect()
     } else {
       if (this.meter < 3) {
         let newMeter = this.meter + dt * 3
@@ -114,7 +114,7 @@ const Player = Sprite({
 
 onKey('space', function(e) {
   if (Player.meter > 1 && !Player.shield.reflect) {
-    Player.shield.reflect = true
+    Player.shield.startReflect()
     Player.meter -= 1
     Player.perfectFrames = 3
   }
