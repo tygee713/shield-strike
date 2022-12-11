@@ -89,7 +89,7 @@ const createScene = () => Scene({
             // TODO: function that handles this
           }
         }
-        if (collides(this.shield, projectile)) {
+        if (collides(this.shield.collider, projectile) && !projectile.reflected) {
           if (this.shield.reflect) {
             this.reflectProjectile(i)
           } else {

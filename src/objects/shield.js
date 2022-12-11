@@ -5,37 +5,37 @@ initKeys()
 
 const createCollider = () => Sprite({
   width: 48,
-  height: 20,
+  height: 10,
   x: 0,
   y: 0,
   anchor: { x: 0.5, y: 0.5 },
-  opacity: 0,
-  color: 'red',
   update: function(dt) {
+    let size = this.parent.reflect ? 20 : 10
+    let distance = this.parent.reflect ? 8 : 0
     switch(this.parent.player.direction) {
       case 'east':
-        this.x = 0
+        this.x = distance
         this.y = 0
-        this.width = 20
+        this.width = size
         this.height = 48
         break
       case 'south':
         this.x = 0
-        this.y = 0
+        this.y = distance
         this.width = 48
-        this.height = 20
+        this.height = size
         break
       case 'west':
-        this.x = 0
+        this.x = -distance
         this.y = 0
-        this.width = 20
+        this.width = size
         this.height = 48
         break
       default:
         this.x = 0
-        this.y = 0
+        this.y = -distance
         this.width = 48
-        this.height = 20
+        this.height = size
         break
     }
   }
@@ -124,6 +124,8 @@ const createShield = (player) => {
     reflect: false,
     energy: 0,
     player,
+    collider,
+    barrier,
     children: [collider, barrier],
     update: function(dt) {
       console.log(this.currentAnimation)
