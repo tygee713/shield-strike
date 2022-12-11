@@ -1,4 +1,4 @@
-import { init, GameLoop } from '../lib/kontra.min.mjs'
+import { init, GameLoop, load } from '../lib/kontra.min.mjs'
 // import createStartScene from './scenes/start.js'
 import createMainScene from './scenes/main.js'
 // import createEndScene from './scenes/end.js'
@@ -55,4 +55,8 @@ const loop = GameLoop({
 loop.start()
 
 // TODO: set up start scene
-showMainScene()
+load('assets/player.png').then(function(assets) {
+  showMainScene()
+}).catch(function(err) {
+  console.log(err)
+})

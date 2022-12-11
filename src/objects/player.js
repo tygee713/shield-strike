@@ -1,4 +1,4 @@
-import { degToRad, init, initKeys, keyPressed, onKey, Sprite } from '../../lib/kontra.min.mjs'
+import { degToRad, imageAssets, init, initKeys, keyPressed, onKey, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
 
 let { canvas } = init()
 initKeys()
@@ -23,10 +23,9 @@ export const Shield = Sprite({
 const Player = Sprite({
   x: canvas.width / 2,
   y: canvas.height / 2,
-  width: 32,
-  height: 32,
+  width: 30,
+  height: 40,
   anchor: { x: 0.5, y: 0.5 },
-  color: 'blue',
   children: [Shield],
   direction: 'north',
   health: 10,
@@ -89,38 +88,45 @@ const Player = Sprite({
       }
 
       if (!this.children[0].reflect) {
+        if (this.animations) {
+          console.log('it hit')
+          this.playAnimation(this.direction + 'Walk')
+        }
+        console.log(this.currentAnimation)
         this.x += vector.x * 2
         this.y += vector.y * 2
       }
+    } else {
+      this.animations && this.playAnimation(this.direction + 'Idle')
     }
 
     // set the rotation and change the sprite
-    switch(this.direction) {
-      case 'northeast':
-        this.rotation = degToRad(45)
-        break
-      case 'east':
-        this.rotation = degToRad(90)
-        break
-      case 'southeast':
-        this.rotation = degToRad(135)
-        break
-      case 'south':
-        this.rotation = degToRad(180)
-        break
-      case 'southwest':
-        this.rotation = degToRad(225)
-        break
-      case 'west':
-        this.rotation = degToRad(270)
-        break
-      case 'northwest':
-        this.rotation = degToRad(315)
-        break
-      default:
-        this.rotation = degToRad(0)
-        break
-    }
+    // switch(this.direction) {
+    //   case 'northeast':
+    //     this.rotation = degToRad(45)
+    //     break
+    //   case 'east':
+    //     this.rotation = degToRad(90)
+    //     break
+    //   case 'southeast':
+    //     this.rotation = degToRad(135)
+    //     break
+    //   case 'south':
+    //     this.rotation = degToRad(180)
+    //     break
+    //   case 'southwest':
+    //     this.rotation = degToRad(225)
+    //     break
+    //   case 'west':
+    //     this.rotation = degToRad(270)
+    //     break
+    //   case 'northwest':
+    //     this.rotation = degToRad(315)
+    //     break
+    //   default:
+    //     this.rotation = degToRad(0)
+    //     break
+    // }
   }
 })
 
@@ -131,5 +137,48 @@ onKey('space', function(e) {
     Player.perfectFrames = 3
   }
 })
+
+let image = new Image()
+image.src = 'assets/player.png'
+image.onload = function() {
+  let spriteSheet = SpriteSheet({
+    image,
+    frameWidth: 30,
+    frameHeight: 40,
+    animations: {
+      westIdle: {
+        frames: 1
+      },
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+        loop: true,
+      },
+      eastIdle: {
+        frames: 4
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 30
+      },
+      northIdle: {
+        frames: 7
+      },
+      northWalk: {
+        frames: [6, 7, 8, 7],
+        frameRate: 30
+      },
+      southIdle: {
+        frames: 10
+      },
+      southWalk: {
+        frames: [9, 10, 11, 10],
+        frameRate: 30
+      }
+    }
+  })
+  Player.animations = spriteSheet.animations
+  Player.playAnimation('northIdle')
+}
 
 export default Player
