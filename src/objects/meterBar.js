@@ -13,8 +13,10 @@ const fill = Sprite({
   update: function(dt) {
       let previousWidth = this.width
       this.width = Player.meter * (maxWidth / maxMeter)
-      if (previousWidth >= maxWidth / 3 && this.width < maxWidth / 3) {
+      if (this.width < maxWidth / 3) {
         this.color = '#C82C0B'
+      } else {
+        this.color = '#392E2D'
       }
   },
   reset: function() {
@@ -24,11 +26,16 @@ const fill = Sprite({
 })
 
 const meterBar = Sprite({
-  y: Player.y - 16,
+  x: Player.x - 30,
+  y: Player.y - 30,
   width: maxWidth,
   height: 5,
   color: '#C9BDBB',
   children: [fill],
+  update: function() {
+    this.x = Player.x - 30
+    this.y = Player.y - 30
+  },
   reset: function() {
     fill.reset()
   },

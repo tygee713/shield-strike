@@ -123,7 +123,7 @@ const Player = Sprite({
 })
 
 onKey('space', function(e) {
-  if (Player.meter > 1) {
+  if (Player.meter > 1 && !Shield.reflect) {
     Shield.reflect = true
     Player.meter -= 1
   }
