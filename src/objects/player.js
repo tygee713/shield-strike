@@ -18,16 +18,16 @@ const Player = Sprite({
     this.currentAnimation && this.currentAnimation.update(dt)
     let vector = { x: 0, y: 0 }
 
-    if (keyPressed('w')) {
+    if (keyPressed('w') && this.y > 20) {
       vector.y -= 1
     }
-    if (keyPressed('s')) {
+    if (keyPressed('s') && this.y < canvas.height - 20) {
       vector.y += 1
     }
-    if (keyPressed('a')) {
+    if (keyPressed('a') && this.x > 15) {
       vector.x -= 1
     }
-    if (keyPressed('d')) {
+    if (keyPressed('d') && this.x < canvas.width - 15) {
       vector.x += 1
     }
 
@@ -81,34 +81,6 @@ const Player = Sprite({
     } else {
       this.playAnimation(this.direction + 'Idle')
     }
-
-    // set the rotation and change the sprite
-    // switch(this.direction) {
-    //   case 'northeast':
-    //     this.rotation = degToRad(45)
-    //     break
-    //   case 'east':
-    //     this.rotation = degToRad(90)
-    //     break
-    //   case 'southeast':
-    //     this.rotation = degToRad(135)
-    //     break
-    //   case 'south':
-    //     this.rotation = degToRad(180)
-    //     break
-    //   case 'southwest':
-    //     this.rotation = degToRad(225)
-    //     break
-    //   case 'west':
-    //     this.rotation = degToRad(270)
-    //     break
-    //   case 'northwest':
-    //     this.rotation = degToRad(315)
-    //     break
-    //   default:
-    //     this.rotation = degToRad(0)
-    //     break
-    // }
   }
 })
 
