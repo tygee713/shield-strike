@@ -17,6 +17,18 @@ const Player = Sprite({
   powerUpTime: 0,
   reflectDouble: false,
   speed: 2,
+  reset: function() {
+    this.x = canvas.width / 2
+    this.y = canvas.height / 2
+    this.direction = 'north'
+    this.health = 10
+    this.meter = 3
+    this.meterCooldown = 0
+    this.perfectFrames = 0
+    this.powerUpTime = 0
+    this.reflectDouble = false
+    this.speed = 2
+  },
   update: function(dt) {
     this.currentAnimation && this.currentAnimation.update(dt)
     if (this.dead) return

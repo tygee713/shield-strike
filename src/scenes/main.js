@@ -204,6 +204,9 @@ const createScene = () => Scene({
     HealthBar.render()
   },
   onShow: function() {
+    HealthBar.reset()
+    Player.reset()
+    MeterBar.reset()
     this.shield = createShield(Player)
     Player.shield = this.shield
     this.add(this.shield)

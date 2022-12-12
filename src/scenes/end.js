@@ -4,6 +4,9 @@ import { showMainScene } from '../game.js'
 let { canvas } = init()
 initKeys()
 
+let winPicture = null
+let lossPicture = null
+
 const Screen = Sprite({
   x: 0,
   y: 0,
@@ -11,29 +14,38 @@ const Screen = Sprite({
   height: canvas.height,
 })
 
-const Text = Sprite({
-  x: canvas.width / 2,
-  y: canvas.height - 100,
-  width: 160,
-  height: 40,
-  anchor: { x: 0.5, y: 0.5 },
-})
-
 let image = new Image()
-image.src = 'assets/endscreen.png'
+image.src = 'assets/win_screen.png'
 image.onload = function() {
-  Screen.image = image
+  winPicture = image
 }
 
 let image2 = new Image()
-image2.src = 'assets/end_screen_press_enter.png'
+image2.src = 'assets/gameover_screen.png'
 image2.onload = function() {
-  Text.image = image2
+  lossPicture = image2
 }
 
 const createScene = (win) => Scene({
   id: 'end',
-  objects: [Screen, Text],
+  objects: [Screen],
+  win,
+  onShow: function() {
+    if (win) {
+      Screen.image = winPicture
+    } else {
+      Screen.image = lossPicture
+    }
+  },
+  update: function(dt) {
+    if (!Screen.image) {
+      if (this.win) {
+        Screen.image = winPicture
+      } else {
+        Screen.image = lossPicture
+      }
+    }
+  }
 })
 
 onKey('enter', function(e) {
