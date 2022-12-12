@@ -133,7 +133,7 @@ const enemyAttributes = {
   },
   'floatingeye': {
     range: 500,
-    speed: 1.5,
+    speed: 1.6,
     projectileType: 'darkmatter',
     castInterval: 2,
     health: 4,
@@ -176,7 +176,7 @@ const enemyAttributes = {
   },
   'archer': {
     range: 500,
-    speed: 1.5,
+    speed: 1.6,
     projectileType: 'arrow',
     castInterval: 1,
     health: 2,
@@ -219,7 +219,7 @@ const enemyAttributes = {
   },
   'skeleton': {
     range: 100,
-    speed: 2,
+    speed: 2.5,
     projectileType: 'bone',
     castInterval: 0.5,
     health: 1,

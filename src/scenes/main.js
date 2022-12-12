@@ -14,7 +14,7 @@ const levelAttributes = {
   1: {
     enemySpawnInterval: 20,
     numEnemiesToSpawn: 10,
-    enemyTypes: ['goblin', 'goblincannon', 'goblinmage', 'floatingeye', 'archer'],
+    enemyTypes: ['goblin', 'goblincannon', 'goblinmage', 'floatingeye', 'archer', 'skeleton'],
   },
   // 2: {
   //   enemySpawnInterval: 5,
@@ -81,6 +81,8 @@ const createScene = () => Scene({
     this.shield = createShield(Player)
     Player.shield = this.shield
     this.add(this.shield)
+    this.spawnEnemies()
+    this.timeSinceSpawn = 0
   },
   update: function(dt) {
     // loop through all the projectiles and check for collisions

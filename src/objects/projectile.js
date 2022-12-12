@@ -2,6 +2,8 @@ import { degToRad, init, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
 
 let { canvas } = init()
 
+const rotationSpeed = 2
+
 const projectileAttributes = {
   'rock': {
     speed: 2,
@@ -94,7 +96,7 @@ const createProjectile = (x, y, targetX, targetY, type, enemy) => {
       this.currentAnimation && this.currentAnimation.update(dt)
       this.x += this.xDelta
       this.y += this.yDelta
-      if (this.rotate) this.rotation += degToRad(90) * dt
+      if (this.rotate) this.rotation += degToRad(90) * dt * rotationSpeed
     }
   })
 
