@@ -1,4 +1,4 @@
-import { init, Sprite } from '../../lib/kontra.min.mjs'
+import { init, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
 import Player from '../objects/player.js'
 
 let { canvas } = init()
@@ -11,52 +11,153 @@ const enemyAttributes = {
     castInterval: 3,
     health: 1,
     castTime: 1,
+    imagePath: 'assets/goblin.png',
+    width: 28,
+    height: 34,
+    projectileWidth: 8,
+    projectileHeight: 8,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 9, 10, 12, 13, 14],
+        frameRate: 7,
+      },
+      westAfterAttack: {
+        frames: 15,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 21, 22, 24, 25, 26],
+        frameRate: 7,
+      },
+      eastAfterAttack: {
+        frames: 27,
+      },
+    },
   },
-  'mage': {
+  'goblincannon': {
     range: 400,
-    speed: 2,
-    projectileType: 'fireball',
-    castInterval: 3,
-    health: 2,
-    castTime: 2,
-  },
-  'cannoneer': {
-    range: 300,
     speed: 1,
-    projectileType: 'cannon',
+    projectileType: 'cannonball',
     castInterval: 4,
-    health: 3,
-    castTime: 3,
+    health: 5,
+    castTime: 2,
+    imagePath: 'assets/goblincannon.png',
+    width: 48,
+    height: 50,
+    projectileWidth: 16,
+    projectileHeight: 16,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 8, 9, 10, 12, 13],
+        frameRate: 7 / 2,
+      },
+      westAfterAttack: {
+        frames: [14, 15, 16],
+        frameRate: 3,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 20, 21, 22, 24, 25],
+        frameRate: 7 / 2,
+      },
+      eastAfterAttack: {
+        frames: [26, 27, 28],
+        frameRate: 3,
+      },
+    },
   },
-  'floating eye': {
-    range: 200,
+  'goblinmage': {
+    range: 400,
+    speed: 1.2,
+    projectileType: 'fish',
+    castInterval: 2,
+    health: 3,
+    castTime: 2,
+    imagePath: 'assets/goblinmage.png',
+    width: 50,
+    height: 52,
+    projectileWidth: 40,
+    projectileHeight: 22,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 9, 10, 12],
+        frameRate: 5 / 2,
+      },
+      westAfterAttack: {
+        frames: [13, 14, 15, 16],
+        frameRate: 4,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 21, 22, 24],
+        frameRate: 5 / 2,
+      },
+      eastAfterAttack: {
+        frames: [25, 26, 27, 28],
+        frameRate: 4,
+      },
+    },
+  },
+  'floatingeye': {
+    range: 500,
     speed: 3,
-    projectileType: 'darkblast',
-    castInterval: 1,
-    health: 2,
+    projectileType: 'darkmatter',
+    castInterval: 2,
+    health: 4,
     castTime: 1,
   },
   'archer': {
     range: 500,
     speed: 3,
     projectileType: 'arrow',
-    castInterval: 2,
-    health: 1,
-    castTime: 1,
-  },
-  'necromancer': {
-    range: null,
-    speed: 1,
-    projectileType: null,
-    castInterval: 5,
+    castInterval: 1,
     health: 2,
-    castTime: 4,
+    castTime: 1,
   },
   'skeleton': {
     range: 100,
-    speed: 4,
+    speed: 5,
     projectileType: 'bone',
-    castInterval: 1,
+    castInterval: 0.5,
     health: 1,
     castTime: 0.5,
   },
@@ -71,12 +172,11 @@ const createCollider = () => Sprite({
 })
 
 const createEnemy = (x, y, type, scene) => {
-  const { range, speed, projectileType, castInterval, health, castTime } = enemyAttributes[type]
+  const { range, speed, projectileType, castInterval, health, castTime, imagePath, width, height, animations, projectileWidth, projectileHeight } = enemyAttributes[type]
   const collider = createCollider()
-  return Sprite({
-    width: 32,
-    height: 32,
-    color: 'purple',
+  let enemy = Sprite({
+    width,
+    height,
     x,
     y,
     anchor: { x: 0.5, y: 0.5 },
@@ -89,15 +189,17 @@ const createEnemy = (x, y, type, scene) => {
     facing: null,
     scene,
     castInterval,
+    hitByProjectiles: [],
     children: [collider],
     update: function(dt) {
       this.timeSinceAttack += dt
+      this.currentAnimation && this.currentAnimation.update(dt)
 
       // update which way it's facing depending on player position
       if (Player.x > this.x) {
-        this.facing = 'right'
+        this.facing = 'east'
       } else {
-        this.facing = 'left'
+        this.facing = 'west'
       }
       
       let xDistance = this.x - Player.x
@@ -127,24 +229,43 @@ const createEnemy = (x, y, type, scene) => {
         let angle = Math.atan2(yDiff, xDiff)
         this.x += Math.cos(angle) * this.speed
         this.y += Math.sin(angle) * this.speed
+        this.playAnimation(this.facing + 'Walk')
       } else {
         // otherwise, shoot a projectile towards current player position if timeSinceAttack > castInterval
         if (this.timeSinceAttack >= this.castInterval) {
           // start attack
+          this.playAnimation(this.facing + 'Attack')
           this.attackAnimationTime += dt
-          // once the animation time reaches the point where the character shoots a projectile
+          // once the animation time finishes, the character shoots a projectile
           if (this.attackAnimationTime >= this.castTime) {
-            let xOffset = this.facing === 'right' ? 24 : -24
-            let yOffset = this.y < Player.y ? 24 : -24
-            this.scene.shootProjectile(this.x + xOffset, this.y + yOffset, projectileType)
+            this.playAnimation(this.facing + 'AfterAttack')
+            let xOffset = width / 2
+            if (this.facing === 'west') xOffset = xOffset * -1
+            this.scene.shootProjectile(this.x + xOffset, this.y, projectileType, this)
             this.timeSinceAttack = 0
             this.attackAnimationTime = 0
           }
+        } else {
+          this.playAnimation(this.facing + 'Idle')
         }
       }
       
     }
   })
+
+  let image = new Image()
+  image.src = imagePath
+  image.onload = function() {
+    let spriteSheet = SpriteSheet({
+      image,
+      frameWidth: width,
+      frameHeight: height,
+      animations,
+    })
+    enemy.animations = spriteSheet.animations
+    enemy.currentAnimation = null
+  }
+  return enemy
 }
 
 export default createEnemy

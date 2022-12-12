@@ -55,7 +55,14 @@ const loop = GameLoop({
 loop.start()
 
 // TODO: set up start scene
-load('assets/player.png', 'assets/reflector_shield_cast.png', 'assets/reflector_shield_honeycomb_held.png').then(function(assets) {
+load('assets/player.png',
+'assets/reflector_shield_cast.png',
+'assets/reflector_shield_honeycomb_held.png',
+'assets/goblin.png',
+'assets/goblin_projectile.png',
+'assets/goblincannon.png',
+'assets/goblincannon_projectile.png',
+).then(function(assets) {
   showMainScene()
 }).catch(function(err) {
   console.log(err)

@@ -13,9 +13,14 @@ const { canvas } = init()
 const levelAttributes = {
   1: {
     enemySpawnInterval: 5,
-    numEnemiesToSpawn: 3,
-    enemyTypes: ['goblin'],
-  }
+    numEnemiesToSpawn: 10,
+    enemyTypes: ['goblin', 'goblincannon', 'goblinmage'],
+  },
+  // 2: {
+  //   enemySpawnInterval: 5,
+  //   numEnemiesToSpawn: 2,
+  //   enemyTypes: []
+  // }
 }
 
 const mapSegments = [
@@ -69,7 +74,7 @@ const createScene = () => Scene({
       Player.render()
       this.shield.render()
     }
-    MeterBar.render()
+    Player.meter < 3 && MeterBar.render()
     HealthBar.render()
   },
   onShow: function() {
@@ -82,7 +87,8 @@ const createScene = () => Scene({
     this.projectiles.forEach((projectile, i) => {
       if (projectile.alive) {
         for (let x = 0; x < this.enemies.length; x++) {
-          if (collides(this.enemies[x], projectile)) {
+          // Prevents enemy from hitting themselves instantly and also prevents passthrough damage from same projectile multiple times
+          if (collides(this.enemies[x], projectile) && (projectile.reflected || projectile.enemy != this.enemies[x]) && !this.enemies[x].hitByProjectiles.includes(i)) {
             this.damageEnemy(x, i)
           }
           if (collides(this.enemies[x], Player)) {
@@ -135,8 +141,9 @@ const createScene = () => Scene({
     let projectile = this.projectiles[projectileIndex]
     if (!projectile.alive) return
     enemy.health -= projectile.damage
+    enemy.hitByProjectiles.push(projectileIndex)
     if (enemy.health <= 0) {
-      if (this.timeSincePowerup >= 10) {
+      if (this.timeSincePowerup >= 20) {
         let powerup = createPowerup(enemy)
         this.powerups.push(powerup)
         this.add(powerup)
@@ -193,15 +200,15 @@ const createScene = () => Scene({
       let { xMin, xMax, yMin, yMax } = mapSegments[Math.floor(Math.random() * mapSegments.length)]
       let xValue = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin
       let yValue = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin
-      let enemy = createEnemy(xValue, yValue, enemyTypes[0], this)
+      let enemy = createEnemy(xValue, yValue, enemyTypes[Math.floor(Math.random() * enemyTypes.length)], this)
       this.enemies.push(enemy)
       this.add(enemy)
     }
   },
-  shootProjectile: function(originX, originY, type) {
+  shootProjectile: function(originX, originY, type, enemy) {
     // Spawn a projectile from an enemy position
     // Called from the enemy's update function
-    let projectile = createProjectile(originX, originY, Player.x, Player.y, type)
+    let projectile = createProjectile(originX, originY, Player.x, Player.y, type, enemy)
     this.projectiles.push(projectile)
     this.add(projectile)
   },

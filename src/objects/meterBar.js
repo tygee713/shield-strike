@@ -11,13 +11,12 @@ const fill = Sprite({
   height: 5,
   color: '#392E2D',
   update: function(dt) {
-      let previousWidth = this.width
-      this.width = Player.meter * (maxWidth / maxMeter)
-      if (this.width < maxWidth / 3) {
-        this.color = '#C82C0B'
-      } else {
-        this.color = '#392E2D'
-      }
+    this.width = Player.meter * (maxWidth / maxMeter)
+    if (this.width < maxWidth / 3) {
+      this.color = '#C82C0B'
+    } else {
+      this.color = '#392E2D'
+    }
   },
   reset: function() {
     this.width = maxWidth
