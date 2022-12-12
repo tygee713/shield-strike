@@ -70,7 +70,9 @@ load('assets/player.png',
   'assets/titlescreen.png',
   'assets/start_menu_press_enter.png',
   'assets/powerup_movespeed.png',
-  'assets/powerup_reflector.png'
+  'assets/powerup_reflector.png',
+  'assets/win_screen.png',
+  'assets/gameover_screen.png'
 ).then(function(assets) {
   showStartScene()
 }).catch(function(err) {
