@@ -28,6 +28,7 @@ const Player = Sprite({
     this.powerUpTime = 0
     this.reflectDouble = false
     this.speed = 2
+    this.dead = false
   },
   update: function(dt) {
     this.currentAnimation && this.currentAnimation.update(dt)
