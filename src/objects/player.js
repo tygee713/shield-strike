@@ -14,8 +14,21 @@ const Player = Sprite({
   meter: 3,
   meterCooldown: 0,
   perfectFrames: 0,
+  powerUpTime: 0,
+  reflectDouble: false,
+  speed: 2,
   update: function(dt) {
     this.currentAnimation && this.currentAnimation.update(dt)
+    if (this.dead) return
+
+    if (this.powerUpTime > 0) {
+      this.powerUpTime -= dt
+      if (this.powerUpTime <= 0) {
+        this.speed = 2
+        this.reflectDouble = false
+      }
+    }
+
     let vector = { x: 0, y: 0 }
 
     if (keyPressed('w') && this.y > 20) {
@@ -73,8 +86,8 @@ const Player = Sprite({
       if (!this.shield.reflect) {
         this.playAnimation(this.direction + 'Walk')
 
-        this.x += vector.x * 2
-        this.y += vector.y * 2
+        this.x += vector.x * this.speed
+        this.y += vector.y * this.speed
       } else {
         this.playAnimation(this.direction + 'Idle')
       }
@@ -85,7 +98,7 @@ const Player = Sprite({
 })
 
 onKey('space', function(e) {
-  if (Player.meter > 1 && !Player.shield.reflect) {
+  if (Player.meter > 1 && !Player.shield.reflect && !Player.dead) {
     Player.shield.startReflect()
     Player.meter -= 1
     Player.perfectFrames = 6
@@ -128,6 +141,10 @@ image.onload = function() {
         frames: [9, 10, 11, 10],
         frameRate: 10,
       },
+      death: {
+        frames: ['15..34', 34, 34, 34, 34, 34, 34, 34, 34, 34, 34],
+        frameRate: 10,
+      }
     }
   })
   Player.animations = spriteSheet.animations

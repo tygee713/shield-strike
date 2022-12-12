@@ -31,7 +31,7 @@ image2.onload = function() {
   Text.image = image2
 }
 
-const createScene = () => Scene({
+const createScene = (win) => Scene({
   id: 'end',
   objects: [Screen, Text],
 })

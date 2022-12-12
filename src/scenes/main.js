@@ -211,8 +211,15 @@ const createScene = () => Scene({
   },
   update: function(dt) {
     this.timeElapsed += dt
+    if (this.timeSinceEnded && this.timeSinceEnded > 0) {
+      this.timeSinceEnded -= dt
+      Player.update(dt)
+
+      if (this.timeSinceEnded <= 0) { showEndScene(false) }
+      return
+    }
     let newLevel = Math.floor(this.timeElapsed / 15) + 1
-    if (newLevel > 7) alert('you win!')
+    if (newLevel > 7) showEndScene(true)
     if (newLevel > this.level) this.level = newLevel
 
     // loop through all the projectiles and check for collisions
@@ -297,7 +304,11 @@ const createScene = () => Scene({
     // this.projectiles.splice(projectileIndex, 1)
     projectile.alive = false
     this.remove(projectile)
-    if (Player.health <= 0) showEndScene()
+    if (Player.health <= 0) {
+      this.timeSinceEnded = 3
+      Player.dead = true
+      Player.playAnimation('death')
+    }
   },
   reflectProjectile: function(projectileIndex) {
     // Reflect the projectile's x and y velocities
@@ -314,6 +325,15 @@ const createScene = () => Scene({
     this.shield.energy += 10
     projectile.rotation += degToRad(180)
     projectile.reflected = true
+    // if (Player.reflectDouble) {
+    //   let projectile2 = createProjectile(projectile.x, projectile.y, null, null, projectile.type, projectile.enemy)
+    //   let newAngle = projectile.angle + degToRad(90)
+    //   projectile2.angle = newAngle
+    //   projectile2.xDelta = Math.cos(newAngle) * projectile.speed
+    //   projectile2.yDelta = Math.sin(newAngle) * projectile.speed
+    //   this.projectiles.push(projectile2)
+    //   this.add(projectile2)
+    // }
   },
   absorbProjectile: function(projectileIndex) {
     // Delete the projectile
@@ -326,7 +346,6 @@ const createScene = () => Scene({
     this.shield.energy += 10
   },
   spawnEnemies: function() {
-    console.log('it hit')
     // Spawn a number of enemies depending on the level
     // Choose x segments of the map at random and then spread out the spawns in those segments
     let enemies = levelAttributes[this.level].enemies
@@ -351,8 +370,14 @@ const createScene = () => Scene({
     this.add(projectile)
   },
   gainPowerup: function(powerupIndex) {
-    // TODO: take action depending on powerup type
     let powerup = this.powerups[powerupIndex]
+    if (powerup.type == 'speedUp') {
+      Player.speed += 0.5
+    // } else if (powerup.type == 'reflectUp') {
+    //   Player.reflectDouble = true
+    // }
+    }
+    Player.powerUpTime = 10
     this.powerups.splice(powerupIndex, 1)
     this.remove(powerup)
   },

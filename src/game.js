@@ -68,7 +68,9 @@ load('assets/player.png',
   'assets/skeleton.png',
   'assets/skeleton_projectile.png',
   'assets/titlescreen.png',
-  'assets/start_menu_press_enter.png'
+  'assets/start_menu_press_enter.png',
+  'assets/powerup_movespeed.png',
+  'assets/powerup_reflector.png'
 ).then(function(assets) {
   showStartScene()
 }).catch(function(err) {

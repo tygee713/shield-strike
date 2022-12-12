@@ -91,6 +91,7 @@ const createProjectile = (x, y, targetX, targetY, type, enemy) => {
     rotation: angle,
     rotate,
     enemy,
+    speed,
     anchor: { x: 0.5, y: 0.5 },
     update: function(dt) {
       this.currentAnimation && this.currentAnimation.update(dt)
