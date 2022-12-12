@@ -12,9 +12,9 @@ const { canvas } = init()
 
 const levelAttributes = {
   1: {
-    enemySpawnInterval: 5,
+    enemySpawnInterval: 20,
     numEnemiesToSpawn: 10,
-    enemyTypes: ['goblin', 'goblincannon', 'goblinmage'],
+    enemyTypes: ['goblin', 'goblincannon', 'goblinmage', 'floatingeye', 'archer'],
   },
   // 2: {
   //   enemySpawnInterval: 5,

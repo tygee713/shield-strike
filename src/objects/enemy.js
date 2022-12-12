@@ -14,8 +14,6 @@ const enemyAttributes = {
     imagePath: 'assets/goblin.png',
     width: 28,
     height: 34,
-    projectileWidth: 8,
-    projectileHeight: 8,
     animations: {
       westWalk: {
         frames: [0, 1, 2, 1],
@@ -57,8 +55,6 @@ const enemyAttributes = {
     imagePath: 'assets/goblincannon.png',
     width: 48,
     height: 50,
-    projectileWidth: 16,
-    projectileHeight: 16,
     animations: {
       westWalk: {
         frames: [0, 1, 2, 1],
@@ -94,7 +90,7 @@ const enemyAttributes = {
   },
   'goblinmage': {
     range: 400,
-    speed: 1.2,
+    speed: 1.3,
     projectileType: 'fish',
     castInterval: 2,
     health: 3,
@@ -102,8 +98,6 @@ const enemyAttributes = {
     imagePath: 'assets/goblinmage.png',
     width: 50,
     height: 52,
-    projectileWidth: 40,
-    projectileHeight: 22,
     animations: {
       westWalk: {
         frames: [0, 1, 2, 1],
@@ -139,27 +133,132 @@ const enemyAttributes = {
   },
   'floatingeye': {
     range: 500,
-    speed: 3,
+    speed: 1.5,
     projectileType: 'darkmatter',
     castInterval: 2,
     health: 4,
     castTime: 1,
+    imagePath: 'assets/floatingeye.png',
+    width: 30,
+    height: 42,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 9, 10, 12, 13],
+        frameRate: 6,
+      },
+      westAfterAttack: {
+        frames: [14, 15, 16],
+        frameRate: 3,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 21, 22, 24, 25],
+        frameRate: 6,
+      },
+      eastAfterAttack: {
+        frames: [26, 27, 28],
+        frameRate: 3,
+      },
+    },
   },
   'archer': {
     range: 500,
-    speed: 3,
+    speed: 1.5,
     projectileType: 'arrow',
     castInterval: 1,
     health: 2,
     castTime: 1,
+    imagePath: 'assets/archer.png',
+    width: 42,
+    height: 40,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 9, 10, 12],
+        frameRate: 5,
+      },
+      westAfterAttack: {
+        frames: [13, 15, 16],
+        frameRate: 3,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 21, 22, 24],
+        frameRate: 5,
+      },
+      eastAfterAttack: {
+        frames: [25, 27, 28],
+        frameRate: 3,
+      },
+    },
   },
   'skeleton': {
     range: 100,
-    speed: 5,
+    speed: 2,
     projectileType: 'bone',
     castInterval: 0.5,
     health: 1,
     castTime: 0.5,
+    imagePath: 'assets/skeleton.png',
+    width: 28,
+    height: 34,
+    animations: {
+      westWalk: {
+        frames: [0, 1, 2, 1],
+        frameRate: 10,
+      },
+      westIdle: {
+        frames: 1,
+      },
+      westAttack: {
+        frames: [6, 7, 9, 10, 12],
+        frameRate: 10,
+      },
+      westAfterAttack: {
+        frames: [13, 15],
+        frameRate: 4,
+      },
+      eastWalk: {
+        frames: [3, 4, 5, 4],
+        frameRate: 10,
+      },
+      eastIdle: {
+        frames: 4,
+      },
+      eastAttack: {
+        frames: [18, 19, 21, 22, 24],
+        frameRate: 10,
+      },
+      eastAfterAttack: {
+        frames: [25, 27],
+        frameRate: 4,
+      },
+    },
   },
 }
 
@@ -172,7 +271,7 @@ const createCollider = () => Sprite({
 })
 
 const createEnemy = (x, y, type, scene) => {
-  const { range, speed, projectileType, castInterval, health, castTime, imagePath, width, height, animations, projectileWidth, projectileHeight } = enemyAttributes[type]
+  const { range, speed, projectileType, castInterval, health, castTime, imagePath, width, height, animations } = enemyAttributes[type]
   const collider = createCollider()
   let enemy = Sprite({
     width,

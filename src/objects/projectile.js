@@ -33,18 +33,10 @@ const projectileAttributes = {
       }
     }
   },
-  'arrow': {
-    speed: 4,
-    damage: 1,
-    imagePath: 'assets/archer_projectile.png',
-    width: 24,
-    height: 6,
-    passThrough: false,
-  },
   'darkmatter': {
     speed: 4,
     damage: 2,
-    imagePath: 'assets/goblinmage_projectile.png',
+    imagePath: 'assets/floatingeye_projectile.png',
     width: 30,
     height: 30,
     passThrough: true,
@@ -55,6 +47,14 @@ const projectileAttributes = {
       }
     },
     rotate: true,
+  },
+  'arrow': {
+    speed: 4,
+    damage: 1,
+    imagePath: 'assets/archer_projectile.png',
+    width: 24,
+    height: 6,
+    passThrough: false,
   },
   'bone': {
     speed: 6,
