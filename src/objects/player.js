@@ -101,33 +101,33 @@ image.onload = function() {
     frameHeight: 40,
     animations: {
       westIdle: {
-        frames: 1
+        frames: 1,
       },
       westWalk: {
         frames: [0, 1, 2, 1],
         frameRate: 10,
       },
       eastIdle: {
-        frames: 4
+        frames: 4,
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
       },
       northIdle: {
-        frames: 7
+        frames: 7,
       },
       northWalk: {
         frames: [6, 7, 8, 7],
         frameRate: 10,
       },
       southIdle: {
-        frames: 10
+        frames: 10,
       },
       southWalk: {
         frames: [9, 10, 11, 10],
         frameRate: 10,
-      }
+      },
     }
   })
   Player.animations = spriteSheet.animations

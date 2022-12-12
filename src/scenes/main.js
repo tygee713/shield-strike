@@ -1,4 +1,4 @@
-import { init, Scene, Sprite, GameObject, collides } from '../../lib/kontra.min.mjs'
+import { init, Scene, Sprite, collides, degToRad } from '../../lib/kontra.min.mjs'
 import Player from '../objects/player.js'
 import createEnemy from '../objects/enemy.js'
 import { showEndScene } from '../game.js'
@@ -12,15 +12,126 @@ const { canvas } = init()
 
 const levelAttributes = {
   1: {
-    enemySpawnInterval: 20,
-    numEnemiesToSpawn: 10,
-    enemyTypes: ['goblin', 'goblincannon', 'goblinmage', 'floatingeye', 'archer', 'skeleton'],
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 3,
+      type: 'goblin',
+    }]
   },
-  // 2: {
+  2: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 2,
+      type: 'goblin',
+    }, {
+      amount: 2,
+      type: 'archer',
+    }, {
+      amount: 1,
+      type: 'goblinmage',
+    }]
+  },
+  3: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 2,
+      type: 'goblin',
+    }, {
+      amount: 1,
+      type: 'archer',
+    }, {
+      amount: 2,
+      type: 'goblinmage',
+    }, {
+      amount: 1,
+      type: 'goblincannon',
+    }]
+  },
+  4: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 5,
+      type: 'skeleton',
+    }, {
+      amount: 2,
+      type: 'goblincannon',
+    }]
+  },
+  5: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 2,
+      type: 'goblin',
+    }, {
+      amount: 2,
+      type: 'goblinmage',
+    }, {
+      amount: 1,
+      type: 'goblincannon',
+    }, {
+      amount: 1,
+      type: 'floatingeye',
+    }]
+  },
+  6: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 3,
+      type: 'goblin',
+    }, {
+      amount: 2,
+      type: 'archer',
+    }, {
+      amount: 1,
+      type: 'goblinmage',
+    }, {
+      amount: 2,
+      type: 'floatingeye',
+    }]
+  },
+  7: {
+    enemySpawnInterval: 5,
+    enemies: [{
+      amount: 2,
+      type: 'goblin',
+    }, {
+      amount: 2,
+      type: 'archer',
+    }, {
+      amount: 1,
+      type: 'goblinmage',
+    }, {
+      amount: 2,
+      type: 'floatingeye',
+    }, {
+      amount: 2,
+      type: 'goblincannon',
+    }, {
+      amount: 3,
+      type: 'skeleton',
+    }]
+  },
+  // 8: {
   //   enemySpawnInterval: 5,
-  //   numEnemiesToSpawn: 2,
-  //   enemyTypes: []
-  // }
+  //   enemies: [{
+  //     amount: 3,
+  //     type: 'goblin',
+  //   }]
+  // },
+  // 9: {
+  //   enemySpawnInterval: 5,
+  //   enemies: [{
+  //     amount: 3,
+  //     type: 'goblin',
+  //   }]
+  // },
+  // 10: {
+  //   enemySpawnInterval: 5,
+  //   enemies: [{
+  //     amount: 3,
+  //     type: 'goblin',
+  //   }]
+  // },
 }
 
 const mapSegments = [
@@ -54,16 +165,31 @@ const mapSegments = [
   },
 ]
 
+const Background = Sprite({
+  x: 0,
+  y: 0,
+  width: canvas.width,
+  height: canvas.height
+})
+
+let image = new Image()
+image.src = 'assets/background.png'
+image.onload = function() {
+  // Background.image = image
+}
+
 const createScene = () => Scene({
   id: 'main',
   level: 1,
+  timeElapsed: 0,
   timeSinceSpawn: 0,
   timeSincePowerup: 0,
   enemies: [],
   projectiles: [],
   powerups: [],
-  objects: [HealthBar, Player, MeterBar],
+  objects: [Background, HealthBar, Player, MeterBar],
   render: function() {
+    Background.render()
     this.powerups.forEach(obj => obj.render())
     this.enemies.forEach(obj => obj.render())
     this.projectiles.forEach(obj => obj.alive && obj.render())
@@ -82,9 +208,13 @@ const createScene = () => Scene({
     Player.shield = this.shield
     this.add(this.shield)
     this.spawnEnemies()
-    this.timeSinceSpawn = 0
   },
   update: function(dt) {
+    this.timeElapsed += dt
+    let newLevel = Math.floor(this.timeElapsed / 15) + 1
+    if (newLevel > 7) alert('you win!')
+    if (newLevel > this.level) this.level = newLevel
+
     // loop through all the projectiles and check for collisions
     this.projectiles.forEach((projectile, i) => {
       if (projectile.alive) {
@@ -177,11 +307,12 @@ const createScene = () => Scene({
     projectile.xDelta = -projectile.xDelta
     projectile.yDelta = -projectile.yDelta
     if (Player.perfectFrames > 0) {
-      projectile.xDelta = projectile.xDelta * 2
-      projectile.yDelta = projectile.yDelta * 2
+      projectile.xDelta = projectile.xDelta * 1.5
+      projectile.yDelta = projectile.yDelta * 1.5
     }
     // Increase the shield's energy
     this.shield.energy += 10
+    projectile.rotation += degToRad(180)
     projectile.reflected = true
   },
   absorbProjectile: function(projectileIndex) {
@@ -195,16 +326,21 @@ const createScene = () => Scene({
     this.shield.energy += 10
   },
   spawnEnemies: function() {
+    console.log('it hit')
     // Spawn a number of enemies depending on the level
     // Choose x segments of the map at random and then spread out the spawns in those segments
-    let { numEnemiesToSpawn, enemyTypes } = levelAttributes[this.level]
-    for (let x = 0; x < numEnemiesToSpawn; x++) {
-      let { xMin, xMax, yMin, yMax } = mapSegments[Math.floor(Math.random() * mapSegments.length)]
-      let xValue = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin
-      let yValue = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin
-      let enemy = createEnemy(xValue, yValue, enemyTypes[Math.floor(Math.random() * enemyTypes.length)], this)
-      this.enemies.push(enemy)
-      this.add(enemy)
+    let enemies = levelAttributes[this.level].enemies
+    for (let x = 0; x < enemies.length; x++) {
+      let { amount, type } = enemies[x]
+
+      for (let y = 0; y < amount; y++) {
+        let { xMin, xMax, yMin, yMax } = mapSegments[Math.floor(Math.random() * mapSegments.length)]
+        let xValue = Math.floor(Math.random() * (xMax - xMin + 1)) + xMin
+        let yValue = Math.floor(Math.random() * (yMax - yMin + 1)) + yMin
+        let enemy = createEnemy(xValue, yValue, type, this)
+        this.enemies.push(enemy)
+        this.add(enemy)
+      }
     }
   },
   shootProjectile: function(originX, originY, type, enemy) {

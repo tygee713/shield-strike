@@ -128,7 +128,6 @@ const createShield = (player) => {
     barrier,
     children: [collider, barrier],
     update: function(dt) {
-      console.log(this.currentAnimation)
       this.currentAnimation && this.currentAnimation.update(dt)
       // change position based on player's direction
       switch(this.player.direction) {

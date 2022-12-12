@@ -89,7 +89,7 @@ const enemyAttributes = {
     },
   },
   'goblinmage': {
-    range: 400,
+    range: 500,
     speed: 1.3,
     projectileType: 'fish',
     castInterval: 2,
@@ -219,7 +219,7 @@ const enemyAttributes = {
   },
   'skeleton': {
     range: 100,
-    speed: 2.5,
+    speed: 2.2,
     projectileType: 'bone',
     castInterval: 0.5,
     health: 1,
