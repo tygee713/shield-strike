@@ -155,8 +155,9 @@ image.onload = function() {
         frameRate: 10,
       },
       death: {
-        frames: ['15..34', 34, 34, 34, 34, 34, 34, 34, 34, 34, 34],
+        frames: ['15..34'],
         frameRate: 10,
+        loop: false,
       }
     }
   })

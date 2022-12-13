@@ -10,13 +10,14 @@ const fill = Sprite({
   width: maxWidth,
   height: 20,
   color: '#C82C0B',
-  update: function(dt) {
-    this.width = Player.health * (maxWidth / maxHealth)
-  },
   reset: function() {
     this.width = maxWidth
     this.color = '#C82C0B'
-  }
+  },
+  update: function(dt) {
+    let newWidth = Player.health >= 0 ? Player.health * (maxWidth / maxHealth) : 0
+    this.width = newWidth
+  },
 })
 
 const text = Text({

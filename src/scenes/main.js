@@ -7,8 +7,13 @@ import createPowerup from '../objects/powerup.js'
 import createShield from '../objects/shield.js'
 import MeterBar from '../objects/meterBar.js'
 import HealthBar from '../objects/healthBar.js'
+import Timer from '../objects/timer.js'
+import createWaveDisplay from '../objects/wave.js'
 
 const { canvas } = init()
+
+// testing controls
+const toggleHUD = false
 
 const levelAttributes = {
   1: {
@@ -187,26 +192,35 @@ const createScene = () => Scene({
   enemies: [],
   projectiles: [],
   powerups: [],
-  objects: [Background, HealthBar, Player, MeterBar],
+  objects: [Timer, Background, HealthBar, Player, MeterBar],
   render: function() {
     Background.render()
     this.powerups.forEach(obj => obj.render())
     this.enemies.forEach(obj => obj.render())
     this.projectiles.forEach(obj => obj.alive && obj.render())
     if (Player.direction == 'north') {
-      this.shield.render()
+      !Player.dead && this.shield.render()
       Player.render()
     } else {
       Player.render()
-      this.shield.render()
+      !Player.dead && this.shield.render()
     }
-    Player.meter < 3 && MeterBar.render()
+    Player.meter < 3 && !Player.dead && MeterBar.render()
     HealthBar.render()
+    if (toggleHUD) {
+      Timer.render()
+      this.wave.render()
+    }
   },
   onShow: function() {
     HealthBar.reset()
     Player.reset()
     MeterBar.reset()
+    if (toggleHUD) {
+      Timer.reset()
+      this.wave = createWaveDisplay(this)
+      this.add(this.wave)
+    }
     this.shield = createShield(Player)
     Player.shield = this.shield
     this.add(this.shield)
@@ -214,9 +228,12 @@ const createScene = () => Scene({
   },
   update: function(dt) {
     this.timeElapsed += dt
+    // If the player has died, let player animation play out then show end screen
     if (this.timeSinceEnded && this.timeSinceEnded > 0) {
       this.timeSinceEnded -= dt
       Player.update(dt)
+      HealthBar.update(dt)
+      this.shield.update(dt)
 
       if (this.timeSinceEnded <= 0) { showEndScene(false) }
       return

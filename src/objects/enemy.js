@@ -11,6 +11,7 @@ const enemyAttributes = {
     castInterval: 3,
     health: 1,
     castTime: 1,
+    afterCastTime: 1/7,
     imagePath: 'assets/goblin.png',
     width: 28,
     height: 34,
@@ -23,12 +24,14 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 9, 10, 12, 13, 14],
+        frames: [6, 7, 9, 10, 12, 13, 14, 15],
         frameRate: 7,
       },
-      westAfterAttack: {
-        frames: 15,
-      },
+      // westAfterAttack: {
+      //   frames: 15,
+      //   frameRate: 7,
+      //   
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -37,12 +40,14 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 21, 22, 24, 25, 26],
+        frames: [18, 19, 21, 22, 24, 25, 26, 27],
         frameRate: 7,
       },
-      eastAfterAttack: {
-        frames: 27,
-      },
+      // eastAfterAttack: {
+      //   frames: 27,
+      //   frameRate: 10,
+      //   
+      // },
     },
   },
   'goblincannon': {
@@ -66,10 +71,12 @@ const enemyAttributes = {
       westAttack: {
         frames: [6, 7, 8, 9, 10, 12, 13],
         frameRate: 7 / 2,
+        
       },
       westAfterAttack: {
         frames: [14, 15, 16],
-        frameRate: 3,
+        frameRate: 10,
+        
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
@@ -81,10 +88,12 @@ const enemyAttributes = {
       eastAttack: {
         frames: [18, 19, 20, 21, 22, 24, 25],
         frameRate: 7 / 2,
+        
       },
       eastAfterAttack: {
         frames: [26, 27, 28],
-        frameRate: 3,
+        frameRate: 10,
+        
       },
     },
   },
@@ -109,10 +118,12 @@ const enemyAttributes = {
       westAttack: {
         frames: [6, 7, 9, 10, 12],
         frameRate: 5 / 2,
+        
       },
       westAfterAttack: {
         frames: [13, 14, 15, 16],
-        frameRate: 4,
+        frameRate: 10,
+        
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
@@ -124,10 +135,12 @@ const enemyAttributes = {
       eastAttack: {
         frames: [18, 19, 21, 22, 24],
         frameRate: 5 / 2,
+        
       },
       eastAfterAttack: {
         frames: [25, 26, 27, 28],
-        frameRate: 4,
+        frameRate: 10,
+        
       },
     },
   },
@@ -152,10 +165,12 @@ const enemyAttributes = {
       westAttack: {
         frames: [6, 7, 9, 10, 12, 13],
         frameRate: 6,
+        
       },
       westAfterAttack: {
         frames: [14, 15, 16],
-        frameRate: 3,
+        frameRate: 10,
+        
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
@@ -167,10 +182,12 @@ const enemyAttributes = {
       eastAttack: {
         frames: [18, 19, 21, 22, 24, 25],
         frameRate: 6,
+        
       },
       eastAfterAttack: {
         frames: [26, 27, 28],
-        frameRate: 3,
+        frameRate: 10,
+        
       },
     },
   },
@@ -181,6 +198,7 @@ const enemyAttributes = {
     castInterval: 1,
     health: 2,
     castTime: 1,
+    afterCastTime: 3/5,
     imagePath: 'assets/archer.png',
     width: 42,
     height: 40,
@@ -193,13 +211,13 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 9, 10, 12],
+        frames: [6, 7, 9, 10, 12, 13, 15, 16],
         frameRate: 5,
       },
-      westAfterAttack: {
-        frames: [13, 15, 16],
-        frameRate: 3,
-      },
+      // westAfterAttack: {
+      //   frames: [13, 15, 16],
+      //   frameRate: 10,
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -208,13 +226,15 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 21, 22, 24],
+        frames: [18, 19, 21, 22, 24, 25, 27, 28],
         frameRate: 5,
+        
       },
-      eastAfterAttack: {
-        frames: [25, 27, 28],
-        frameRate: 3,
-      },
+      // eastAfterAttack: {
+      //   frames: [25, 27, 28],
+      //   frameRate: 10,
+        
+      // },
     },
   },
   'skeleton': {
@@ -238,10 +258,12 @@ const enemyAttributes = {
       westAttack: {
         frames: [6, 7, 9, 10, 12],
         frameRate: 10,
+        
       },
       westAfterAttack: {
         frames: [13, 15],
-        frameRate: 4,
+        frameRate: 10,
+        
       },
       eastWalk: {
         frames: [3, 4, 5, 4],
@@ -253,10 +275,12 @@ const enemyAttributes = {
       eastAttack: {
         frames: [18, 19, 21, 22, 24],
         frameRate: 10,
+        
       },
       eastAfterAttack: {
         frames: [25, 27],
-        frameRate: 4,
+        frameRate: 10,
+        
       },
     },
   },
@@ -271,7 +295,7 @@ const createCollider = () => Sprite({
 })
 
 const createEnemy = (x, y, type, scene) => {
-  const { range, speed, projectileType, castInterval, health, castTime, imagePath, width, height, animations } = enemyAttributes[type]
+  const { range, speed, projectileType, castInterval, health, castTime, afterCastTime, imagePath, width, height, animations } = enemyAttributes[type]
   const collider = createCollider()
   let enemy = Sprite({
     width,
@@ -284,6 +308,7 @@ const createEnemy = (x, y, type, scene) => {
     timeSinceAttack: 0,
     attackAnimationTime: 0,
     castTime,
+    afterCastTime,
     health,
     facing: null,
     scene,
@@ -337,12 +362,16 @@ const createEnemy = (x, y, type, scene) => {
           this.attackAnimationTime += dt
           // once the animation time finishes, the character shoots a projectile
           if (this.attackAnimationTime >= this.castTime) {
-            this.playAnimation(this.facing + 'AfterAttack')
-            let xOffset = width / 2
-            if (this.facing === 'west') xOffset = xOffset * -1
-            this.scene.shootProjectile(this.x + xOffset, this.y, projectileType, this)
-            this.timeSinceAttack = 0
-            this.attackAnimationTime = 0
+            if (!this.attacked) {
+              let xOffset = width / 2
+              if (this.facing === 'west') xOffset = xOffset * -1
+              this.attacked = true
+              this.scene.shootProjectile(this.x + xOffset, this.y, projectileType, this)
+            } else if (this.attackAnimationTime >= this.castTime + this.afterCastTime) {
+              this.timeSinceAttack = 0
+              this.attackAnimationTime = 0
+              this.attacked = false
+            }
           }
         } else {
           this.playAnimation(this.facing + 'Idle')
