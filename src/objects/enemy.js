@@ -57,6 +57,7 @@ const enemyAttributes = {
     castInterval: 4,
     health: 5,
     castTime: 2,
+    afterCastTime: 6/7,
     imagePath: 'assets/goblincannon.png',
     width: 48,
     height: 50,
@@ -69,15 +70,14 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 8, 9, 10, 12, 13],
+        frames: [6, 7, 8, 9, 10, 12, 13, 14, 15, 16],
         frameRate: 7 / 2,
-        
       },
-      westAfterAttack: {
-        frames: [14, 15, 16],
-        frameRate: 10,
+      // westAfterAttack: {
+      //   frames: [14, 15, 16],
+      //   frameRate: 10,
         
-      },
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -86,15 +86,14 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 20, 21, 22, 24, 25],
+        frames: [18, 19, 20, 21, 22, 24, 25, 26, 27, 28],
         frameRate: 7 / 2,
-        
       },
-      eastAfterAttack: {
-        frames: [26, 27, 28],
-        frameRate: 10,
+      // eastAfterAttack: {
+      //   frames: [26, 27, 28],
+      //   frameRate: 10,
         
-      },
+      // },
     },
   },
   'goblinmage': {
@@ -104,6 +103,7 @@ const enemyAttributes = {
     castInterval: 2,
     health: 3,
     castTime: 2,
+    afterCastTime: 1,
     imagePath: 'assets/goblinmage.png',
     width: 50,
     height: 52,
@@ -116,15 +116,14 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 9, 10, 12],
-        frameRate: 5 / 2,
-        
+        frames: [6, 7, 9, 10, 12, 13, 14, 15, 16],
+        frameRate: 3,
       },
-      westAfterAttack: {
-        frames: [13, 14, 15, 16],
-        frameRate: 10,
+      // westAfterAttack: {
+      //   frames: [13, 14, 15, 16],
+      //   frameRate: 10,
         
-      },
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -133,15 +132,14 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 21, 22, 24],
-        frameRate: 5 / 2,
-        
+        frames: [18, 19, 21, 22, 24, 25, 26, 27, 28],
+        frameRate: 3,
       },
-      eastAfterAttack: {
-        frames: [25, 26, 27, 28],
-        frameRate: 10,
+      // eastAfterAttack: {
+      //   frames: [25, 26, 27, 28],
+      //   frameRate: 10,
         
-      },
+      // },
     },
   },
   'floatingeye': {
@@ -151,6 +149,7 @@ const enemyAttributes = {
     castInterval: 2,
     health: 4,
     castTime: 1,
+    afterCastTime: 3/6,
     imagePath: 'assets/floatingeye.png',
     width: 30,
     height: 42,
@@ -163,15 +162,15 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 9, 10, 12, 13],
+        frames: [6, 7, 9, 10, 12, 13, 14, 15, 16],
         frameRate: 6,
         
       },
-      westAfterAttack: {
-        frames: [14, 15, 16],
-        frameRate: 10,
+      // westAfterAttack: {
+      //   frames: [14, 15, 16],
+      //   frameRate: 10,
         
-      },
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -180,15 +179,15 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 21, 22, 24, 25],
+        frames: [18, 19, 21, 22, 24, 25, 26, 27, 28],
         frameRate: 6,
         
       },
-      eastAfterAttack: {
-        frames: [26, 27, 28],
-        frameRate: 10,
+      // eastAfterAttack: {
+      //   frames: [26, 27, 28],
+      //   frameRate: 10,
         
-      },
+      // },
     },
   },
   'archer': {
@@ -239,11 +238,12 @@ const enemyAttributes = {
   },
   'skeleton': {
     range: 100,
-    speed: 2.2,
+    speed: 2.1,
     projectileType: 'bone',
     castInterval: 0.5,
     health: 1,
     castTime: 0.5,
+    afterCastTime: 0.2,
     imagePath: 'assets/skeleton.png',
     width: 28,
     height: 34,
@@ -256,15 +256,15 @@ const enemyAttributes = {
         frames: 1,
       },
       westAttack: {
-        frames: [6, 7, 9, 10, 12],
+        frames: [6, 7, 9, 10, 12, 13, 15],
         frameRate: 10,
         
       },
-      westAfterAttack: {
-        frames: [13, 15],
-        frameRate: 10,
+      // westAfterAttack: {
+      //   frames: [13, 15],
+      //   frameRate: 10,
         
-      },
+      // },
       eastWalk: {
         frames: [3, 4, 5, 4],
         frameRate: 10,
@@ -273,15 +273,15 @@ const enemyAttributes = {
         frames: 4,
       },
       eastAttack: {
-        frames: [18, 19, 21, 22, 24],
+        frames: [18, 19, 21, 22, 24, 25, 27],
         frameRate: 10,
         
       },
-      eastAfterAttack: {
-        frames: [25, 27],
-        frameRate: 10,
+      // eastAfterAttack: {
+      //   frames: [25, 27],
+      //   frameRate: 10,
         
-      },
+      // },
     },
   },
 }
