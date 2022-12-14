@@ -15,6 +15,7 @@ const enemyAttributes = {
     imagePath: 'assets/goblin.png',
     width: 28,
     height: 34,
+    minRange: 36,
     animations: {
       westWalk: {
         frames: [0, 1, 2, 1],
@@ -247,6 +248,7 @@ const enemyAttributes = {
     imagePath: 'assets/skeleton.png',
     width: 28,
     height: 34,
+    minRange: 36,
     animations: {
       westWalk: {
         frames: [0, 1, 2, 1],
@@ -286,6 +288,8 @@ const enemyAttributes = {
   },
 }
 
+const defaultMinRange = 100
+
 const createCollider = () => Sprite({
   width: 16,
   height: 16,
@@ -295,7 +299,7 @@ const createCollider = () => Sprite({
 })
 
 const createEnemy = (x, y, type, scene) => {
-  const { range, speed, projectileType, castInterval, health, castTime, afterCastTime, imagePath, width, height, animations } = enemyAttributes[type]
+  const { range, speed, projectileType, castInterval, health, castTime, afterCastTime, imagePath, width, height, minRange, animations } = enemyAttributes[type]
   const collider = createCollider()
   let enemy = Sprite({
     width,
@@ -305,6 +309,7 @@ const createEnemy = (x, y, type, scene) => {
     anchor: { x: 0.5, y: 0.5 },
     range,
     speed,
+    minRange: minRange || defaultMinRange,
     timeSinceAttack: 0,
     attackAnimationTime: 0,
     castTime,
@@ -329,7 +334,7 @@ const createEnemy = (x, y, type, scene) => {
       let xDistance = this.x - Player.x
       let yDistance = this.y - Player.y
       let distanceToPlayer = Math.sqrt(xDistance * xDistance + yDistance * yDistance)
-      if ((distanceToPlayer > this.range || this.timeSinceAttack < this.castInterval) && !this.attackAnimationTime) {
+      if ((distanceToPlayer > this.range || (distanceToPlayer > this.minRange && this.timeSinceAttack < this.castInterval)) && !this.attackAnimationTime) {
         // if the enemy is too close to another, try moving away from it before moving towards the player
         if (this.colliderEnemy) {
           if (this.colliderEnemy.x > this.x) {
@@ -355,10 +360,21 @@ const createEnemy = (x, y, type, scene) => {
         this.y += Math.sin(angle) * this.speed
         this.playAnimation(this.facing + 'Walk')
       } else {
-        // otherwise, shoot a projectile towards current player position if timeSinceAttack > castInterval
+        // otherwise, start attack towards current player position if their cooldown is up
         if (this.timeSinceAttack >= this.castInterval) {
-          // start attack
-          this.playAnimation(this.facing + 'Attack')
+          // set initial direction the attack is facing, in case enemy switches their direction during
+          if (!this.attackingDirection) {
+            this.attackingDirection = this.facing
+            const newAnimation = this.animations[this.attackingDirection + 'Attack'].clone()
+            const newAnimationName = this.attackingDirection + 'Attack' + 'Clone'
+            this.animations[newAnimationName] = newAnimation
+            this.playAnimation(newAnimationName)
+          }
+          
+          if (this.facing !== this.attackingDirection) {
+            this.currentAnimation.frames = [...this.animations[this.facing + 'Attack'].frames]
+          }
+          
           this.attackAnimationTime += dt
           // once the animation time finishes, the character shoots a projectile
           if (this.attackAnimationTime >= this.castTime) {
@@ -367,10 +383,11 @@ const createEnemy = (x, y, type, scene) => {
               if (this.facing === 'west') xOffset = xOffset * -1
               this.attacked = true
               this.scene.shootProjectile(this.x + xOffset, this.y, projectileType, this)
-            } else if (this.attackAnimationTime >= this.castTime + this.afterCastTime) {
+            } else if (this.attackAnimationTime > this.castTime + this.afterCastTime) {
               this.timeSinceAttack = 0
               this.attackAnimationTime = 0
               this.attacked = false
+              this.attackingDirection = null
             }
           }
         } else {

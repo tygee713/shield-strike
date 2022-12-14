@@ -223,6 +223,7 @@ const createScene = () => Scene({
     }
     this.shield = createShield(Player)
     Player.shield = this.shield
+    Player.scene = this
     this.add(this.shield)
     this.spawnEnemies()
   },

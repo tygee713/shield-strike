@@ -1,4 +1,4 @@
-import { degToRad, imageAssets, init, initKeys, keyPressed, onKey, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
+import { degToRad, GameObject, imageAssets, init, initKeys, keyPressed, onKey, Sprite, SpriteSheet, collides } from '../../lib/kontra.min.mjs'
 
 let { canvas } = init()
 initKeys()
@@ -99,8 +99,36 @@ const Player = Sprite({
       if (!this.shield.reflect) {
         this.playAnimation(this.direction + 'Walk')
 
-        this.x += vector.x * this.speed
-        this.y += vector.y * this.speed
+        let deltaX = vector.x * this.speed
+        let deltaY = vector.y * this.speed
+
+        // UNUSED: code for pushing enemies that you collide with
+        // let collisionObject = GameObject({
+        //   x: this.x + deltaX,
+        //   y: this.y + deltaY,
+        //   width: this.width,
+        //   height: this.height,
+        //   anchor: this.anchor,
+        // })
+        // let collisionDetected = false
+        // for (let x = 0; x < this.scene.enemies.length; x++) {
+        //   if (!this.scene.enemies[x]) continue
+        //   if (collides(this.scene.enemies[x].children[0], collisionObject)) {
+        //     collisionDetected = true
+        //     if (this.direction == 'north' || this.direction == 'south') {
+        //       this.scene.enemies[x].y += deltaY / 2
+        //     } else {
+        //       this.scene.enemies[x].x += deltaX / 2
+        //     }
+        //   }
+        // }
+        //   if (collisionDetected) {
+        //     deltaX = deltaX / 2
+        //     deltaY = deltaY / 2
+        //   }
+        this.x += deltaX
+        this.y += deltaY
+
       } else {
         this.playAnimation(this.direction + 'Idle')
       }
