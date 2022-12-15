@@ -1,4 +1,4 @@
-import { init, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
+import { angleToTarget, degToRad, init, Sprite, SpriteSheet } from '../../lib/kontra.min.mjs'
 import Player from '../objects/player.js'
 
 let { canvas } = init()
@@ -321,6 +321,14 @@ const createEnemy = (x, y, type, scene) => {
     hitByProjectiles: [],
     children: [collider],
     update: function(dt) {
+      // If the enemy is being booped, send them in the opposite direction of the player
+      if (this.boopTime && this.boopTime > 0) {
+        this.x += Math.cos(angleToTarget(Player.initialPosition, this.initialPosition) - degToRad(90)) * (this.speed + 1)
+        this.y += Math.sin(angleToTarget(Player.initialPosition, this.initialPosition) - degToRad(90)) * (this.speed + 1)
+        this.boopTime -= dt
+        return
+      }
+
       this.timeSinceAttack += dt
       this.currentAnimation && this.currentAnimation.update(dt)
 

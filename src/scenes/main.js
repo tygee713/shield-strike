@@ -278,6 +278,14 @@ const createScene = () => Scene({
     
     for (let x = 0; x < this.enemies.length; x++) {
       // Check that enemies collide with the player
+      // If the shield is reflecting, boop the enemy
+      if (this.shield.reflect && collides(this.enemies[x].children[0], this.shield.collider) && (!this.enemies[x].boopTime || this.enemies[x].boopTime < 0)) {
+        Player.initialPosition = { x: Player.x, y: Player.y }
+        this.enemies[x].initialPosition = { x: this.enemies[x].x, y: this.enemies[x].y }
+        this.enemies[x].boopTime = 0.3
+      }
+
+      // If the player body is colliding with the enemy body, move it away
       if (collides(this.enemies[x].children[0], Player)) {
         if (Player.x > this.enemies[x].x) {
           this.enemies[x].x -= .5
