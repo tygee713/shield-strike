@@ -266,6 +266,7 @@ const createScene = () => Scene({
         } 
       }
     })
+    
 
     // Check that player picked up a powerup
     for (let x = 0; x < this.powerups.length; x++) {
@@ -274,13 +275,39 @@ const createScene = () => Scene({
       }
     }
 
-    // Check that enemies collide with each other
+    
     for (let x = 0; x < this.enemies.length; x++) {
+      // Check that enemies collide with the player
+      if (collides(this.enemies[x].children[0], Player)) {
+        if (Player.x > this.enemies[x].x) {
+          this.enemies[x].x -= .5
+        } else {
+          this.enemies[x].x += .5
+        }
+
+        if (Player.y > this.enemies[x].y) {
+          this.enemies[x].y -= .5
+        } else {
+          this.enemies[x].y += .5
+        }
+      }
+
       for (let y = 0; y < this.enemies.length; y++) {
+        // Check that enemies collide with each other
         if (!this.enemies[x]) break
         if (!this.enemies[y]) continue
         if (x != y && collides(this.enemies[x].children[0], this.enemies[y].children[0])) {
-          this.enemies[x].colliderEnemy = this.enemies[y]
+          if (this.enemies[y].x > this.enemies[x].x) {
+            this.enemies[x].x -= .5
+          } else {
+            this.enemies[x].x += .5
+          }
+
+          if (this.enemies[y].y > this.enemies[x].y) {
+            this.enemies[x].y -= .5
+          } else {
+            this.enemies[x].y += .5
+          }
         }
       }
     }

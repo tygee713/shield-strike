@@ -334,24 +334,8 @@ const createEnemy = (x, y, type, scene) => {
       let xDistance = this.x - Player.x
       let yDistance = this.y - Player.y
       let distanceToPlayer = Math.sqrt(xDistance * xDistance + yDistance * yDistance)
+      // if the enemy is too close to the player, do not move
       if ((distanceToPlayer > this.range || (distanceToPlayer > this.minRange && this.timeSinceAttack < this.castInterval)) && !this.attackAnimationTime) {
-        // if the enemy is too close to another, try moving away from it before moving towards the player
-        if (this.colliderEnemy) {
-          if (this.colliderEnemy.x > this.x) {
-            this.x -= 1
-          } else {
-            this.x += 1
-          }
-
-          if (this.colliderEnemy.y > this.y) {
-            this.y -= 1
-          } else {
-            this.y += 1
-          }
-
-          this.colliderEnemy = null
-        }
-
         // move towards the player position if the distance to the player position is greater than its range
         let xDiff = Player.x - this.x
         let yDiff = Player.y - this.y
