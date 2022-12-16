@@ -232,9 +232,14 @@ const createScene = () => Scene({
     // If the player has died, let player animation play out then show end screen
     if (this.timeSinceEnded && this.timeSinceEnded > 0) {
       this.timeSinceEnded -= dt
+
+      // If we want everything to freeze around the player
       Player.update(dt)
       HealthBar.update(dt)
       this.shield.update(dt)
+
+      // If we want to have enemies and projectiles continue behavior as normal after death
+      // this.objects.forEach((obj) => obj.update(dt))
 
       if (this.timeSinceEnded <= 0) { showEndScene(false) }
       return
@@ -337,6 +342,7 @@ const createScene = () => Scene({
     if (!projectile.alive) return
     enemy.health -= projectile.damage
     enemy.hitByProjectiles.push(projectileIndex)
+    enemy.opacityFrames = 3
     if (enemy.health <= 0) {
       if (this.timeSincePowerup >= 20) {
         let powerup = createPowerup(enemy)

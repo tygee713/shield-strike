@@ -267,6 +267,17 @@ const createEnemy = (x, y, type, scene) => {
     hitByProjectiles: [],
     children: [collider],
     update: function(dt) {
+      if (this.opacityFrames && this.opacityFrames > 0) {
+        if (this.opacityFrames > 2 || this.opacityFrames <= 1) {
+          this.opacity = 0
+        } else {
+          this.opacity = .5
+        }
+        this.opacityFrames -= dt * 6
+      } else {
+        this.opacity = 1
+      }
+
       // If the enemy is being booped, send them in the opposite direction of the player
       if (this.boopTime && this.boopTime > 0) {
         this.x += Math.cos(angleToTarget(Player.initialPosition, this.initialPosition) - degToRad(90)) * (this.speed + 1)
