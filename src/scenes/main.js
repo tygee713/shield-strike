@@ -342,7 +342,6 @@ const createScene = () => Scene({
     if (!projectile.alive) return
     enemy.health -= projectile.damage
     enemy.hitByProjectiles.push(projectileIndex)
-    enemy.opacityFrames = 3
     if (enemy.health <= 0) {
       if (this.timeSincePowerup >= 20) {
         let powerup = createPowerup(enemy)
@@ -352,6 +351,8 @@ const createScene = () => Scene({
       }
       this.enemies.splice(enemyIndex, 1)
       this.remove(enemy)
+    } else {
+      enemy.opacityFrames = 3
     }
     if (!projectile.passThrough) {
       // this.projectiles.splice(projectileIndex, 1)
@@ -370,6 +371,8 @@ const createScene = () => Scene({
       this.timeSinceEnded = 3
       Player.dead = true
       Player.playAnimation('death')
+    } else {
+      Player.opacityFrames = 3
     }
   },
   reflectProjectile: function(projectileIndex) {

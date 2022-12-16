@@ -269,11 +269,11 @@ const createEnemy = (x, y, type, scene) => {
     update: function(dt) {
       if (this.opacityFrames && this.opacityFrames > 0) {
         if (this.opacityFrames > 2 || this.opacityFrames <= 1) {
-          this.opacity = 0
+          this.opacity = .25
         } else {
           this.opacity = .5
         }
-        this.opacityFrames -= dt * 6
+        this.opacityFrames -= dt * 12
       } else {
         this.opacity = 1
       }
