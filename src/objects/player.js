@@ -14,6 +14,8 @@ const Player = Sprite({
   meter: 3,
   meterCooldown: 0,
   perfectFrames: 0,
+  shockFrames: 0,
+  opacityFrames: 0,
   powerUpTime: 0,
   reflectDouble: false,
   speed: 2,
@@ -29,18 +31,31 @@ const Player = Sprite({
     this.reflectDouble = false
     this.speed = 2
     this.dead = false
+    this.opacity = 1
+    this.shockFrames = 0
+    this.opacityFrames = 0
   },
   update: function(dt) {
     this.currentAnimation && this.currentAnimation.update(dt)
-    if (this.dead) return
+    if (this.dead) {
+      this.opacity = 1
+      return
+    }
+
+    if (this.shockFrames && this.shockFrames > 0) {
+      console.log(this.shockFrames)
+      this.playAnimation(this.direction + 'Shock')
+      this.shockFrames -= dt * 10
+      if (this.shockFrames < 0) this.shockFrames = 0
+    }
 
     if (this.opacityFrames && this.opacityFrames > 0) {
-      if (this.opacityFrames > 2 || this.opacityFrames <= 1) {
+      if (Math.floor(this.opacityFrames) % 2 == 0) {
         this.opacity = .25
       } else {
         this.opacity = .5
       }
-      this.opacityFrames -= dt * 12
+      this.opacityFrames -= dt * 10
     } else {
       this.opacity = 1
     }
@@ -52,6 +67,8 @@ const Player = Sprite({
         this.reflectDouble = false
       }
     }
+
+    if (this.shockFrames) return
 
     let vector = { x: 0, y: 0 }
 
@@ -72,8 +89,8 @@ const Player = Sprite({
       this.shield.stopReflect()
     }
 
+    this.perfectFrames > 0 ? this.perfectFrames -= dt * 10 : this.perfectFrames = 0
     if (this.shield.reflect) {
-      this.perfectFrames > 0 ? this.perfectFrames -= dt * 30 : this.shield.currentAnimation = null
       this.meter -= dt
       if (this.meter <= 0) this.shield.stopReflect()
     } else {
@@ -151,9 +168,10 @@ const Player = Sprite({
 
 onKey('space', function(e) {
   if (Player.meter > 1 && !Player.shield.reflect && !Player.dead) {
+    Player.boopEnemies = true
     Player.shield.startReflect()
     Player.meter -= 1
-    Player.perfectFrames = 6
+    Player.perfectFrames = 4
   }
 })
 
@@ -197,7 +215,23 @@ image.onload = function() {
         frames: ['15..34'],
         frameRate: 10,
         loop: false,
-      }
+      },
+      westShock: {
+        frames: [45, 42],
+        frameRate: 10,
+      },
+      eastShock: {
+        frames: [46, 43],
+        frameRate: 10,
+      },
+      northShock: {
+        frames: [39, 36],
+        frameRate: 10,
+      },
+      southShock: {
+        frames: [40, 37],
+        frameRate: 10,
+      },
     }
   })
   Player.animations = spriteSheet.animations

@@ -268,12 +268,12 @@ const createEnemy = (x, y, type, scene) => {
     children: [collider],
     update: function(dt) {
       if (this.opacityFrames && this.opacityFrames > 0) {
-        if (this.opacityFrames > 2 || this.opacityFrames <= 1) {
+        this.opacityFrames -= dt * 10
+        if (Math.floor(this.opacityFrames) % 2 == 0) {
           this.opacity = .25
         } else {
           this.opacity = .5
         }
-        this.opacityFrames -= dt * 12
       } else {
         this.opacity = 1
       }

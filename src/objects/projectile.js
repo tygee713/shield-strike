@@ -51,7 +51,7 @@ const projectileAttributes = {
     rotate: true,
   },
   'arrow': {
-    speed: 4,
+    speed: 5,
     damage: 1,
     imagePath: 'assets/archer_projectile.png',
     width: 24,
@@ -59,11 +59,11 @@ const projectileAttributes = {
     passThrough: false,
   },
   'bone': {
-    speed: 6,
+    speed: 5,
     damage: 1,
     imagePath: 'assets/skeleton_projectile.png',
     width: 10,
-    height: 26,
+    height: 22,
     passThrough: false,
     rotate: true,
   }
@@ -92,6 +92,7 @@ const createProjectile = (x, y, targetX, targetY, type, enemy) => {
     rotate,
     enemy,
     speed,
+    type,
     anchor: { x: 0.5, y: 0.5 },
     update: function(dt) {
       this.currentAnimation && this.currentAnimation.update(dt)

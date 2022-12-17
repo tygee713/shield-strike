@@ -284,7 +284,7 @@ const createScene = () => Scene({
     for (let x = 0; x < this.enemies.length; x++) {
       // Check that enemies collide with the player
       // If the shield is reflecting, boop the enemy
-      if (this.shield.reflect && collides(this.enemies[x].children[0], this.shield.collider) && (!this.enemies[x].boopTime || this.enemies[x].boopTime < 0)) {
+      if (Player.boopEnemies && collides(this.enemies[x], this.shield.collider) && (!this.enemies[x].boopTime || this.enemies[x].boopTime < 0)) {
         Player.initialPosition = { x: Player.x, y: Player.y }
         this.enemies[x].initialPosition = { x: this.enemies[x].x, y: this.enemies[x].y }
         this.enemies[x].boopTime = 0.3
@@ -324,6 +324,7 @@ const createScene = () => Scene({
         }
       }
     }
+    Player.boopEnemies = false
 
     // Spawn enemies if at the time interval
     this.timeSinceSpawn += dt
@@ -365,6 +366,7 @@ const createScene = () => Scene({
     if (!projectile.alive) return
     Player.health -= projectile.damage
     // this.projectiles.splice(projectileIndex, 1)
+    let projectileType = projectile.type
     projectile.alive = false
     this.remove(projectile)
     if (Player.health <= 0) {
@@ -372,7 +374,11 @@ const createScene = () => Scene({
       Player.dead = true
       Player.playAnimation('death')
     } else {
-      Player.opacityFrames = 3
+      if (projectileType == 'darkmatter' && !Player.shockFrames) {
+        Player.shockFrames = 4
+      } else {
+        Player.opacityFrames = 3
+      }
     }
   },
   reflectProjectile: function(projectileIndex) {
