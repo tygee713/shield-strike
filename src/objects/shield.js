@@ -23,7 +23,7 @@ const createCollider = () => Sprite({
         break
       case 'south':
         this.x = 0
-        this.y = distance
+        this.y = -distance
         this.width = 40
         this.height = size
         break
@@ -35,7 +35,7 @@ const createCollider = () => Sprite({
         break
       default:
         this.x = 0
-        this.y = -distance
+        this.y = distance
         this.width = 40
         this.height = size
         break
@@ -53,7 +53,7 @@ const createBarrier = () => {
     update: function(dt) {
       switch(this.parent.player.direction) {
         case 'east':
-          this.x = 0
+          this.x = -4
           this.y = 0
           this.width = 44
           this.height = 50
@@ -65,7 +65,7 @@ const createBarrier = () => {
           this.height = 44
           break
         case 'west':
-          this.x = 0
+          this.x = 4
           this.y = 0
           this.width = 44
           this.height = 50
@@ -158,6 +158,7 @@ const createShield = (player) => {
     player,
     collider,
     barrier,
+    hitPings: [],
     children: [collider, barrier],
     update: function(dt) {
       // this.currentAnimation && this.currentAnimation.update(dt)
@@ -183,6 +184,12 @@ const createShield = (player) => {
       if (this.direction !== this.player.direction && this.reflect) {
         this.changeReflect()
       }
+      this.hitPings.forEach((obj, i) => {
+        if (!obj.alive) {
+          this.removeChild(obj)
+          this.hitPings.splice(i, 1)
+        }
+      })
 
       this.children.forEach(obj => obj.update(dt))
     },

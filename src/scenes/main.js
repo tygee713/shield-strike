@@ -9,6 +9,7 @@ import MeterBar from '../objects/meterBar.js'
 import HealthBar from '../objects/healthBar.js'
 import Timer from '../objects/timer.js'
 import createWaveDisplay from '../objects/wave.js'
+import createHitPing from '../objects/hitPing.js'
 
 const { canvas } = init()
 
@@ -192,6 +193,7 @@ const createScene = () => Scene({
   enemies: [],
   projectiles: [],
   powerups: [],
+  hitPings: [],
   objects: [Timer, Background, HealthBar, Player, MeterBar],
   render: function() {
     Background.render()
@@ -205,6 +207,7 @@ const createScene = () => Scene({
       Player.render()
       !Player.dead && this.shield.render()
     }
+    this.hitPings.forEach(obj => obj.render())
     Player.meter < 3 && !Player.dead && MeterBar.render()
     HealthBar.render()
     if (toggleHUD) {
@@ -396,6 +399,9 @@ const createScene = () => Scene({
     this.shield.energy += 10
     projectile.rotation += degToRad(180)
     projectile.reflected = true
+    let hitPing = createHitPing('reflect')
+    this.shield.addChild(hitPing)
+    this.shield.hitPings.push(hitPing)
     // if (Player.reflectDouble) {
     //   let projectile2 = createProjectile(projectile.x, projectile.y, null, null, projectile.type, projectile.enemy)
     //   let newAngle = projectile.angle + degToRad(90)
@@ -411,6 +417,9 @@ const createScene = () => Scene({
     let projectile = this.projectiles[projectileIndex]
     if (!projectile.alive) return
     // this.projectiles.splice(projectileIndex, 1)
+    let hitPing = createHitPing('normal')
+    this.shield.addChild(hitPing)
+    this.shield.hitPings.push(hitPing)
     projectile.alive = false
     this.remove(projectile)
     // Increase the shield's energy
